@@ -1,16 +1,17 @@
-var Vue = new Vue({
-    el: '#root',
+const {createApp} = Vue
+appTokenRenew = createApp({
     delimiters: ['@{', '}'],
-   mounted() { 
-    var refresh_token = localStorage.getItem('refresh_token');
-    
-    this.$http.post('/token/renew', {"refresh_token" : refresh_token}).then( response =>{
-      if(response.status == 200){
-        token = response.body.token;
-        $cookies.set('token', token);
-        window.location.href = '/';          
-      }
-    })
-  },
+    beforeMount() { 
+      var refresh_token = localStorage.getItem('refresh_token');
+      
+      axios.post('/token/renew', {"refresh_token" : refresh_token}).then( response =>{
+        if(response.status == 200){
+          token = response.data.token;
+          document.cookie ='token= '+ token;
+          window.location.href = '/';          
+        }
+      })
+    },
 });
 
+appTokenRenew.mount("#root")

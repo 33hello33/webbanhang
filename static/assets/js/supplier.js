@@ -86,3 +86,4 @@ appSupplier = createApp({
     this.listSupplier();
   }
 });
+appSupplier.mount("#root")
