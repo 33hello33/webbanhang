@@ -1,10 +1,12 @@
-var Vue = new Vue({
-    el: '#root',
+const {createApp} = Vue
+appSupplier = createApp({
     delimiters: ['@{', '}'],
-    data: {
-    supplier: {id: 0, name: '', phone: '', address: '', notes: ''},
-    suppliers: [],
-    isUpdate: false,
+    data() {
+      return{
+        supplier: {id: 0, name: '', phone: '', address: '', notes: ''},
+        suppliers: [],
+        isUpdate: false,
+      }
   },
   methods: {
     addSupplier() {
@@ -15,7 +17,7 @@ var Vue = new Vue({
     createSupplier(supplier, supplierIndex) {
       if(this.isUpdate == false){
           // create new supplier
-          this.$http.post('supplier/create',{
+          axios.post('supplier/create',{
             name: supplier.name, 
             address: supplier.address, 
             phone: supplier.phone, 
@@ -26,7 +28,7 @@ var Vue = new Vue({
           });
       }else{
         // update supplier
-        this.$http.put('supplier/' + supplier.id,{
+        axios.put('supplier/' + supplier.id,{
             id: supplier.id,
             name: supplier.name, 
             address: supplier.address, 
@@ -44,9 +46,9 @@ var Vue = new Vue({
         }
     },
     listSupplier(){
-      this.$http.get('supplier/list').then(response =>{
+      axios.get('supplier/list').then(response =>{
         if(response.status == 200){
-          this.suppliers =  response.body;
+          this.suppliers =  response.data;
           this.supplier = {id: 0, name: '', phone: '', address: '', notes: ''};
         }
       });
@@ -54,9 +56,9 @@ var Vue = new Vue({
     getDetailSupplier(supplier, supplierIndex){
       this.isUpdate = true;
       this.changeHeader();
-      this.$http.get('supplier/'+supplier.id).then(response =>{
+      axios.get('supplier/'+supplier.id).then(response =>{
         if(response.status == 200){
-          this.supplier =  response.body;
+          this.supplier =  response.data;
         }
       })
     },
@@ -71,7 +73,7 @@ var Vue = new Vue({
     },
     deleteSupplier(supplier, supplierIndex){
       if(confirm("Are you sure ?")){
-        this.$http.delete('supplier/'+ supplier.id).then(response =>{
+        axios.delete('supplier/'+ supplier.id).then(response =>{
           if(response.status == 200){
             this.suppliers.splice(supplierIndex,1);
             this.supplier = {id: 0, name: '', phone: '', address: '', notes: ''};
@@ -80,7 +82,7 @@ var Vue = new Vue({
       }
     },
   },
-  mounted() { 
+  beforeMount() { 
     this.listSupplier();
   }
 });
