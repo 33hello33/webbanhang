@@ -24,19 +24,19 @@
                 <h4 class="nk-block-title">Đăng nhập</h4>
             </div>
         </div>
-        <form @submit.prevent="login" class="form-ajax" data-done="loginSuccess">
+        <form class="form-ajax" data-done="loginSuccess">
             <div class="form-group">
                 <div class="form-label-group">
                     <label class="form-label">Tài khoản hoặc Email</label>
                 </div>
-                <input name="username" v-model="user.username" type="text" class="form-control form-control-lg" placeholder="Nhập tài khoản hoặc email" required="">
+                <input v-model="user.username" type="text" class="form-control form-control-lg" placeholder="Nhập tài khoản hoặc email" required="">
             </div>
             <div class="form-group">
                 <div class="form-label-group">
                     <label class="form-label" for="password">Mật khẩu</label>
                 </div>
                 <div class="form-control-wrap">
-                    <input name="password" v-model="user.password" type="password" class="form-control form-control-lg" id="password" placeholder="Nhập mật khẩu" required="">
+                    <input v-model="user.password" type="password" class="form-control form-control-lg" id="password" placeholder="Nhập mật khẩu" required="">
                     <a href="javascript:void(0)" class="form-icon form-icon-right passcode-switch" data-target="password">
                         <em class="passcode-icon icon-show icon ni ni-eye"></em>
                         <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
@@ -48,8 +48,7 @@
                 <button v-on:click="loginUser()" type="button" class="btn btn-lg btn-primary btn-block">Đăng nhập</button>
             </div>
         </form>
-        <div class="form-note-s2 text-center pt-4"> Bạn chưa có tài khoản? <a href="/register">Đăng
-                ký</a>
+        <div class="form-note-s2 text-center pt-4"> Bạn chưa có tài khoản? <a href="/register">Đăng ký</a>
         </div>
 
     </div>

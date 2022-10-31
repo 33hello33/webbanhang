@@ -1,21 +1,25 @@
-var Vue = new Vue({
-  el: '#root',
+const {createApp} =  Vue;
+const appLogin = createApp({
   delimiters: ['@{', '}'],
-  data: {
-    showError: false,
-    enableEdit: false,
-    user: {username: '', password: ''},
-  },  methods: {
+  data(){
+    return {
+      user: {username: '', password: ''},
+    }
+  }, 
+  methods: {
     loginUser(){
       if (this.user.username == ''){
-        this.showError = true;
+        alert('Chưa nhập tên đăng nhập');
       }else{
-        this.showError = false;
-          this.$http.post('login', {username: this.user.username, password: this.user.password}).then(response => {
-            var data = response.body;
-            $cookies.set('token', data.token);
-            localStorage.setItem('refresh_token', data.refresh_token)
-            window.location.href = '/';          
+        axios.post('login', {username: this.user.username, password: this.user.password}).then(response => {
+            if(response.status == 200){
+              var data = response.data;
+              document.cookie ='token= '+ data.token;
+              localStorage.setItem('refresh_token', data.refresh_token)
+              window.location.href = '/';          
+            }else{
+              console.log(response.data)
+            } 
           });      
         }
     },
@@ -25,4 +29,5 @@ var Vue = new Vue({
       }
     },
   }
-});
+})
+appLogin.mount('#root')
