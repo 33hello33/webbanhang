@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"webbanhang/token"
+	token "webbanhang/token"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,10 +23,13 @@ func authMiddleware(tokenMaker token.PasetoMaker) gin.HandlerFunc {
 
 		payload, err := tokenMaker.VerifyToken(cookie)
 		if err != nil {
-			location := url.URL{Path: "/token/renew"}
-			ctx.Redirect(http.StatusFound, location.RequestURI())
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errResponse(err))
-			return
+			if err == token.ErrExpireToken {
+				location := url.URL{Path: "/token/renew"}
+				ctx.Redirect(http.StatusFound, location.RequestURI())
+			} else {
+				ctx.AbortWithStatusJSON(http.StatusUnauthorized, errResponse(err))
+				return
+			}
 		}
 
 		ctx.Set(authorizationPayloadKey, payload)
