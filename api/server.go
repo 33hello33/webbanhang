@@ -75,15 +75,17 @@ func (server *Server) SetupRoute() {
 	authRoutes.DELETE("/supplier/:id", server.deleteSupplier)
 
 	authRoutes.GET("/invoice", server.invoiceHandler)
-	authRoutes.POST("/invoice", server.createInvoice)
+	authRoutes.POST("/invoice/create", server.createInvoice)
 	authRoutes.GET("/invoice/list", server.listInvoice)
 
 	authRoutes.GET("/revenue", server.revenueHandler)
 
-	authRoutes.POST("/customer", server.createCustomer)
 	authRoutes.GET("/customer", server.customerHandler)
+	authRoutes.POST("/customer/create", server.createCustomer)
 	authRoutes.GET("/customer/list", server.listCustomer)
-	authRoutes.GET("/customer/:phone", server.getDetailCustomer)
+	authRoutes.GET("/customer/:id", server.getDetailCustomer)
+	authRoutes.DELETE("/customer/:id", server.deleteCustomer)
+	authRoutes.PUT("/customer/:id", server.updateCustomer)
 
 	server.route = router
 }

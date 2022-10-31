@@ -1,23 +1,25 @@
-var Vue = new Vue({
-    el: '#root',
+const { createApp } = Vue;
+const appCustomer = createApp({
     delimiters: ['@{', '}'],
-    data: {
-    customer: {id: 0, name: '', phone: '', address: '', notes: ''},
-    customers: [],
-    isUpdate: false,
+    data(){
+      return {
+        customer: {id: 0, name: '', phone: '', address: {String: '', Valid: false}},
+        customers: [],
+        isUpdate: false,
+      }
   },
   methods: {
     addCustomer() {
       this.isUpdate = false;
       this.changeHeader();
-      this.customer = {id: 0, name: '', phone: '', address: ''};
+      this.customer = {id: 0, name: '', phone: '', address: {String: '', Valid: false}};
     },
     createCustomer(customer, customerIndex) {
       if(this.isUpdate == false){
           // create new customer
-          this.$http.post('customer/create',{
+          axios.post('customer/create',{
             name: customer.name, 
-            address: customer.address, 
+            address: customer.address.String, 
             phone: customer.phone}).then(response => {
             if(response.status == 200){
               this.listCustomer();
@@ -25,10 +27,10 @@ var Vue = new Vue({
           });
       }else{
         // update customer
-        this.$http.put('customer/' + customer.id,{
+        axios.put('customer/' + customer.id,{
             id: customer.id,
             name: customer.name, 
-            address: customer.address, 
+            address: customer.address.String, 
             phone: customer.phone}).then(response => {
             if(response.status == 200){
               this.listCustomer();
@@ -42,19 +44,19 @@ var Vue = new Vue({
         }
     },
     listCustomer(){
-      this.$http.get('customer/list').then(response =>{
+      axios.get('customer/list').then(response =>{
         if(response.status == 200){
-          this.customers =  response.body;
-          this.customer = {id: 0, name: '', phone: '', address: '', notes: ''};
+          this.customers =  response.data;
+          this.customer = {id: 0, name: '', phone: '', address: {String: '', Valid: false}};
         }
       });
     },
     getDetailCustomer(customer, customerIndex){
       this.isUpdate = true;
       this.changeHeader();
-      this.$http.get('customer/'+customer.phone).then(response =>{
+      axios.get('customer/'+customer.id).then(response =>{
         if(response.status == 200){
-          this.customer =  response.body;
+          this.customer =  response.data;
         }
       })
     },
@@ -69,16 +71,17 @@ var Vue = new Vue({
     },
     deleteCustomer(customer, customerIndex){
       if(confirm("Are you sure ?")){
-        this.$http.delete('customer/'+ customer.id).then(response =>{
+        axios.delete('customer/'+ customer.id).then(response =>{
           if(response.status == 200){
             this.customers.splice(customerIndex,1);
-            this.customer = {id: 0, name: '', phone: '', address: '', notes: ''};
+            this.customer = {id: 0, name: '', phone: '', address: {String: '', Valid: false}};
           }
         });
       }
     },
   },
-  mounted() { 
+  beforeMount(){
     this.listCustomer();
-  }
-});
+ },
+})  
+appCustomer.mount("#root")

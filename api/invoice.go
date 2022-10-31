@@ -21,9 +21,9 @@ type createInvoiceRequest struct {
 }
 
 type Invoice struct {
-	CustomerPhone string `json:"customer_phone"`
-	TotalMoney    int64  `json:"total_money"`
-	HadPaid       int64  `json:"had_paid,string"`
+	CustomerID int64 `json:"customer_id"`
+	TotalMoney int64 `json:"total_money"`
+	HadPaid    int64 `json:"had_paid,string"`
 }
 
 func (server *Server) createInvoice(ctx *gin.Context) {
@@ -35,10 +35,10 @@ func (server *Server) createInvoice(ctx *gin.Context) {
 	}
 
 	invoiceResult, err := server.store.InvoiceTx(ctx, db.InvoiceTxParams{
-		CustomersPhone: req.Invoice.CustomerPhone,
-		TotalMoney:     req.Invoice.TotalMoney,
-		HadPaid:        req.Invoice.HadPaid,
-		Products:       req.Products,
+		CustomerID: req.Invoice.CustomerID,
+		TotalMoney: req.Invoice.TotalMoney,
+		HadPaid:    req.Invoice.HadPaid,
+		Products:   req.Products,
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))

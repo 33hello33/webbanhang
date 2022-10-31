@@ -13,8 +13,14 @@ order by name;
 
 -- name: DeleteCustomer :exec
 delete from customers
-where phone=$1;
+where id=$1;
 
 -- name: GetCustomer :one
 select * from customers
-where phone = $1 limit 1;
+where id = $1 limit 1;
+
+-- name: UpdateCustomer :one
+update customers 
+set name = $2, address = $3, phone = $4
+where id = $1
+returning *;

@@ -1,6 +1,6 @@
 -- name: CreateInvoice :one
 insert into invoices(
-    customers_phone,
+    customers_id,
     total_money,
     had_paid
 ) values(
@@ -12,7 +12,7 @@ select * from invoices
 where id = $1 limit 1;
 
 -- name: ListInvoice :many
-select invoices.*, to_json(customers.name) as customers_name from invoices left join customers
+select invoices.*, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
 on invoices.customers_phone = customers.phone ;
 
 -- name: CreateInvoiceDetail :one

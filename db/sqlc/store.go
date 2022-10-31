@@ -48,10 +48,10 @@ type ProductTbl struct {
 }
 
 type InvoiceTxParams struct {
-	CustomersPhone string       `json:"customer_phone"`
-	TotalMoney     int64        `json:"total_money"`
-	HadPaid        int64        `json:"had_paid"`
-	Products       []ProductTbl `json:"product"`
+	CustomerID int64        `json:"customer_id"`
+	TotalMoney int64        `json:"total_money"`
+	HadPaid    int64        `json:"had_paid"`
+	Products   []ProductTbl `json:"product"`
 }
 
 type InvoiceTxResult struct {
@@ -63,13 +63,10 @@ func (store *Store) InvoiceTx(ctx context.Context, arg InvoiceTxParams) (Invoice
 	var result InvoiceTxResult
 	var err error
 	err = store.execTx(ctx, func(q *Queries) error {
-		if arg.CustomersPhone == "" {
-			arg.CustomersPhone = "0"
-		}
 		result.Invoice, err = q.CreateInvoice(ctx, CreateInvoiceParams{
-			CustomersPhone: arg.CustomersPhone,
-			TotalMoney:     arg.TotalMoney,
-			HadPaid:        arg.HadPaid,
+			CustomersID: arg.CustomerID,
+			TotalMoney:  arg.TotalMoney,
+			HadPaid:     arg.HadPaid,
 		})
 		if err != nil {
 			return err

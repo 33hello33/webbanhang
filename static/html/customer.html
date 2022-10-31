@@ -31,7 +31,7 @@
                                   <h2 target="_top">ds khách hàng</h2>
                                   <div class="list-leftmenu" v-for="(customer, customerIndex) in customers">
                                     <a v-on:click="getDetailCustomer(customer, customerIndex)" target="_top" > @{ customer.name }</a>
-                                    <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="deletecCustomer(customer, customerIndex)" >x</button>
+                                    <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click="deletecCustomer(customer, customerIndex)" >x</button>
                                   </div>
                                   
                                   <br><br>
@@ -45,7 +45,7 @@
                                   <h4 class="nk-block-title" ref="headerCustomer" id="headerCustomer">Thêm Khách Hàng </h4>
                               </div>
                           </div>
-                          <form @submit.prevent="customer" class="form-ajax">
+                          <form class="form-ajax">
                               <div class="form-group">
                                   <label class="form-label" for="name">Tên khách hàng</label>
                                   <input  type="text" v-model="customer.name" class="form-control form-control-lg" name="name" placeholder="Nhập tên khách hàng" required="">
@@ -56,7 +56,7 @@
                               </div>
                               <div class="form-group">
                                   <label class="form-label" for="address">Địa Chỉ</label>
-                                  <input  type="text" v-model="customer.address" class="form-control form-control-lg" name="address" placeholder="Nhập địa chỉ" required="">
+                                  <input  type="text" v-model="customer.address.String" class="form-control form-control-lg" name="address" placeholder="Nhập địa chỉ" required="">
                               </div>
                               
                               <div class="form-group">

@@ -20,19 +20,19 @@ type Account struct {
 }
 
 type Customer struct {
-	ID      sql.NullInt64  `json:"id"`
+	ID      int64          `json:"id"`
 	Phone   string         `json:"phone"`
 	Name    string         `json:"name"`
 	Address sql.NullString `json:"address"`
 }
 
 type Invoice struct {
-	ID             int64     `json:"id"`
-	CreatedAt      time.Time `json:"created_at"`
-	CustomersPhone string    `json:"customers_phone"`
-	TotalMoney     int64     `json:"total_money"`
-	HadPaid        int64     `json:"had_paid"`
-	IsDeleted      bool      `json:"is_deleted"`
+	ID          int64     `json:"id"`
+	CreatedAt   time.Time `json:"created_at"`
+	CustomersID int64     `json:"customers_id"`
+	TotalMoney  int64     `json:"total_money"`
+	HadPaid     int64     `json:"had_paid"`
+	IsDeleted   bool      `json:"is_deleted"`
 }
 
 type InvoiceDetail struct {

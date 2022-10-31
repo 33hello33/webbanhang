@@ -1,14 +1,15 @@
-var Vue = new Vue({
-  el: '#root',
+const {createApp} = Vue
+appRegister = createApp({
   delimiters: ['&{', '}'],
-  data: {
-    user: {name: '', username: '', password: '', email: ''},
+  data() {
+    return {
+      user: {name: '', username: '', password: '', email: ''},
+    }
   },
   
   methods: {
     registerUser(){
-
-          this.$http.post('register',{name: this.user.name, username: this.user.username, password: this.user.password, email: this.user.email}).then(response => {
+          axios.post('register',{name: this.user.name, username: this.user.username, password: this.user.password, email: this.user.email}).then(response => {
             window.location.href = "/login"
           });
     },
@@ -19,3 +20,4 @@ var Vue = new Vue({
     },
   }
 });
+appRegister.mount("#root")

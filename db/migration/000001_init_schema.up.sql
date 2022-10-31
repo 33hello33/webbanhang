@@ -27,8 +27,8 @@ CREATE TABLE "suppliers" (
 );
 
 CREATE TABLE "customers" (
-  "id" bigserial,
-  "phone" varchar NOT NULL PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
+  "phone" varchar NOT NULL,
   "name" varchar NOT NULL,
   "address" varchar
 );
@@ -36,7 +36,7 @@ CREATE TABLE "customers" (
 CREATE TABLE "invoices" (
   "id" bigserial PRIMARY KEY,
   "created_at" timestamptz NOT NULL DEFAULT 'now()',
-  "customers_phone"  varchar NOT NULL,
+  "customers_id"  bigserial NOT NULL,
   "total_money" bigint NOT NULL,
   "had_paid" bigint NOT NULL,
   "is_deleted" boolean DEFAULT false NOT NULL
@@ -63,7 +63,7 @@ CREATE INDEX ON "customers" ("phone");
 
 ALTER TABLE "products" ADD FOREIGN KEY ("id_supplier") REFERENCES "suppliers" ("id");
 
-ALTER TABLE "invoices" ADD FOREIGN KEY ("customers_phone") REFERENCES "customers" ("phone");
+ALTER TABLE "invoices" ADD FOREIGN KEY ("customers_id") REFERENCES "customers" ("id");
 
 ALTER TABLE "invoice_detail" ADD FOREIGN KEY ("invoice_id") REFERENCES "invoices" ("id");
 

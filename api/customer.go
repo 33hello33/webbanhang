@@ -13,14 +13,14 @@ func (server *Server) customerHandler(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "customer.html", gin.H{"title": "customer"})
 }
 
-type createCustomer struct {
+type createCustomerRequest struct {
 	Name    string `json:"name"`
 	Phone   string `json:"phone"`
 	Address string `json:"address"`
 }
 
 func (server *Server) createCustomer(ctx *gin.Context) {
-	var req createCustomer
+	var req createCustomerRequest
 	err := ctx.ShouldBind(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errResponse(err))
@@ -61,7 +61,7 @@ func (server *Server) listCustomer(ctx *gin.Context) {
 }
 
 type getDetailCustomerRequest struct {
-	Phone string `uri:"phone"`
+	ID int64 `uri:"id"`
 }
 
 func (server *Server) getDetailCustomer(ctx *gin.Context) {
@@ -72,11 +72,61 @@ func (server *Server) getDetailCustomer(ctx *gin.Context) {
 		return
 	}
 
-	customers, err := server.store.GetCustomer(ctx, req.Phone)
+	customers, err := server.store.GetCustomer(ctx, req.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
 
 	ctx.JSON(http.StatusOK, customers)
+}
+
+type deleteCustomerRequest struct {
+	ID int64 `uri:"id" binding:"required"`
+}
+
+func (server *Server) deleteCustomer(ctx *gin.Context) {
+	var req deleteCustomerRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	err = server.store.DeleteCustomer(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
+}
+
+type updateCustomerRequest struct {
+	ID      int64  `json:"id"`
+	Name    string `json:"name"`
+	Phone   string `json:"phone"`
+	Address string `json:"address"`
+}
+
+func (server *Server) updateCustomer(ctx *gin.Context) {
+	var req updateCustomerRequest
+	err := ctx.ShouldBind(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	_, err = server.store.UpdateCustomer(ctx, db.UpdateCustomerParams{
+		ID:      req.ID,
+		Name:    req.Name,
+		Address: sql.NullString{String: req.Address, Valid: req.Address != ""},
+		Phone:   req.Phone,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
 }

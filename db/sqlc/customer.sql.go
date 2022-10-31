@@ -40,21 +40,21 @@ func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) 
 
 const deleteCustomer = `-- name: DeleteCustomer :exec
 delete from customers
-where phone=$1
+where id=$1
 `
 
-func (q *Queries) DeleteCustomer(ctx context.Context, phone string) error {
-	_, err := q.db.ExecContext(ctx, deleteCustomer, phone)
+func (q *Queries) DeleteCustomer(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteCustomer, id)
 	return err
 }
 
 const getCustomer = `-- name: GetCustomer :one
 select id, phone, name, address from customers
-where phone = $1 limit 1
+where id = $1 limit 1
 `
 
-func (q *Queries) GetCustomer(ctx context.Context, phone string) (Customer, error) {
-	row := q.db.QueryRowContext(ctx, getCustomer, phone)
+func (q *Queries) GetCustomer(ctx context.Context, id int64) (Customer, error) {
+	row := q.db.QueryRowContext(ctx, getCustomer, id)
 	var i Customer
 	err := row.Scan(
 		&i.ID,
@@ -96,4 +96,35 @@ func (q *Queries) ListCustomer(ctx context.Context) ([]Customer, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateCustomer = `-- name: UpdateCustomer :one
+update customers 
+set name = $2, address = $3, phone = $4
+where id = $1
+returning id, phone, name, address
+`
+
+type UpdateCustomerParams struct {
+	ID      int64          `json:"id"`
+	Name    string         `json:"name"`
+	Address sql.NullString `json:"address"`
+	Phone   string         `json:"phone"`
+}
+
+func (q *Queries) UpdateCustomer(ctx context.Context, arg UpdateCustomerParams) (Customer, error) {
+	row := q.db.QueryRowContext(ctx, updateCustomer,
+		arg.ID,
+		arg.Name,
+		arg.Address,
+		arg.Phone,
+	)
+	var i Customer
+	err := row.Scan(
+		&i.ID,
+		&i.Phone,
+		&i.Name,
+		&i.Address,
+	)
+	return i, err
 }
