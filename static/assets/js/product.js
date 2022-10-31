@@ -1,15 +1,13 @@
-var Vue = new Vue({
-  el: '#root',
+const {createApp} = Vue
+appProduct = createApp({
   delimiters: ['@{', '}'],
-  data: {
-    product: {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0},
-    products: [],
-    suppliers: [],
-    isUpdate: false,
-  },
-  mounted(){
-    this.listProduct();
-    this.listSupplier();
+  data() {
+    return{
+      product: {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0},
+      products: [],
+      suppliers: [],
+      isUpdate: false,
+    }
   },
   methods: {
     addProduct() {
@@ -18,17 +16,17 @@ var Vue = new Vue({
       this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
     },
     listProduct(){
-      this.$http.get('product/list').then(response =>{
+      axios.get('product/list').then(response =>{
         if(response.status == 200){
-          this.products = response.body;
+          this.products = response.data;
           this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
         }else{
-          console.log(response.body);
+          console.log(response.data);
         }
       });
     },
     createProduct(product, productIndex){
-          this.$http.post('product/create',{
+          axios.post('product/create',{
             name: product.name, 
             unit: product.unit, 
             amount: product.amount, 
@@ -39,7 +37,7 @@ var Vue = new Vue({
             if(response.status == 200){
                 this.listProduct();
             }else{
-              console.log(response.body);
+              console.log(response.data);
             }
           });
     },
@@ -51,9 +49,9 @@ var Vue = new Vue({
     getDetailProduct(product, productIndex){
       this.isUpdate = true;
       this.changeHeader();
-      this.$http.get('product/' + product.id).then(response =>{
+      axios.get('product/' + product.id).then(response =>{
         if (response.status == 200){
-          this.product = response.body;
+          this.product = response.data;
         }
       })
     },
@@ -68,7 +66,7 @@ var Vue = new Vue({
     },
     deleteProduct(product, productIndex){
       if(confirm("Are you sure ?")){
-        this.$http.delete('product/'+ product.id).then(response =>{
+        axios.delete('product/'+ product.id).then(response =>{
           if(response.status == 200){
             this.products.splice(productIndex,1);
             this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
@@ -77,11 +75,16 @@ var Vue = new Vue({
       }
     },
     listSupplier(){
-      this.$http.get('supplier/list').then(response =>{
+      axios.get('supplier/list').then(response =>{
         if(response.status == 200){
-          this.suppliers =  response.body;
+          this.suppliers =  response.data;
         }
       });
     },
-  }
+  },
+  beforeMount(){
+    this.listProduct();
+    this.listSupplier();
+  },
 });
+appProduct.mount("#root")
