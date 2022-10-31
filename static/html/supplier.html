@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi" class="js">
+  {{ template "header.html" }}
+
+<body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
+    {{template "menu.html"}}
+
+    <div class="nk-app-root" id="root">
+        <!-- main @s  -->
+        <div class="nk-main ">
+            <!-- wrap @s  -->
+            <div class="nk-wrap nk-wrap-nosidebar">
+                <!-- content @s  -->
+                <div class="nk-content ">
+                    <div class="nk-block nk-block-middle nk-auth-body  wide-xs">
+                        <div class="brand-logo pb-4 text-center">
+                            <a href="/" class="logo-link">
+                                <img class="logo-dark logo-img logo-img-lg" src="/assets/images/logo.png" alt="logo">
+                            </a>
+                        </div>
+                        <div class="card">
+                          <div class="card-inner card-inner-lg">
+        
+                            <div class="w3-sidebar w3-collapse" id="sidenav" style="top: 44px;display: none;">
+                              <div id="leftmenuinner" style="padding-top: 44px; width: 20%;">
+                                <div id="leftmenuinnerinner">
+                                  <input type="text" name="find" placeholder="Tìm kiếm" class="form-control form-control-lg"/>
+                                  <br>
+                                  <h2 target="_top" v-on:click="addSupplier()" class="addButton">thêm nhà cung cấp</h2>
+                                  <br>
+                                  <h2 target="_top">ds nhà cung cấp</h2>
+                                  <div class="list-leftmenu" v-for="(supplier, supplierIndex) in suppliers">
+                                    <a v-on:click="getDetailSupplier(supplier, supplierIndex)" target="_top"  >@{ supplier.name }</a>
+                                    <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="deleteSupplier(supplier, supplierIndex)" >x</button>
+                                  </div>
+                                  
+                                  <br><br>
+                                </div>
+                              </div>
+                          </div>
+                      
+                      <div class ="right-panel" style="width: 70%; float:right" >
+                          <div class="nk-block-head">
+                              <div class="nk-block-head-content">
+                                  <h4 class="nk-block-title" ref="headerSupplier" id="headerSupplier">Thêm Nhà Cung Cấp</h4>
+                              </div>
+                          </div>
+                          <form @submit.prevent="supplier" class="form-ajax">
+                              <div class="form-group">
+                                  <label class="form-label" for="name">Tên Nhà Cung Cấp</label>
+                                  <input  type="text" v-model="supplier.name" class="form-control form-control-lg" name="name" placeholder="Nhập tên nhà cung cấp" required="">
+                              </div>
+                              <div class="form-group">
+                                  <label class="form-label" for="phone">Số Điện Thoại</label>
+                                  <input  type="text" v-model="supplier.phone" class="form-control form-control-lg" name="phone" placeholder="Nhập số điện thoại nhà cung cấp" required="">
+                              </div>
+                              <div class="form-group">
+                                  <label class="form-label" for="address">Địa Chỉ</label>
+                                  <input  type="text" v-model="supplier.address" class="form-control form-control-lg" name="address" placeholder="Nhập địa chỉ nhà cung cấp" required="">
+                              </div>
+                              <div class="form-group">
+                                  <label class="form-label" for="notes">Ghi Chú</label>
+                                  <input  type="text" v-model="supplier.notes" class="form-control form-control-lg" name=" notes" placeholder="Nhập ghi chú" required="">
+                              </div>
+                              
+                              <div class="form-group">
+                                  <button v-on:click="createSupplier(supplier,supplierIndex)" ref="buttonSupplier" id="buttonSupplier" type="button" class="btn btn-lg btn-primary btn-block">Thêm Nhà Cung Cấp</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- wrap @e  -->
+            </div>
+            <!-- content @e  -->
+        </div>
+        <!-- main @e  -->
+    </div>
+    <script src="/assets/js/supplier.js"></script>
+
+</body>
+</html>

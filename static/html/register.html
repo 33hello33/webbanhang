@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi" class="js">
+{{template "header.html"}}
+
+<body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
+    <div class="nk-app-root" id="root">
+        <!-- main @s  -->
+        <div class="nk-main ">
+            <!-- wrap @s  -->
+            <div class="nk-wrap nk-wrap-nosidebar">
+                <!-- content @s  -->
+                <div class="nk-content ">
+                    <div class="nk-block nk-block-middle nk-auth-body wide-xs" style="width: 520px; margin-left: auto;
+                    margin-right: auto;">
+                        <div class="brand-logo pb-4 text-center">
+                            <a href="/" class="logo-link">
+                                <img class="logo-dark logo-img logo-img-lg" src="/assets/images/logo.png" alt="logo">
+                            </a>
+                        </div>
+                        <div class="card">
+                                <div class="card-inner card-inner-lg">
+        <div class="nk-block-head">
+            <div class="nk-block-head-content">
+                <h4 class="nk-block-title">Đăng ký</h4>
+            </div>
+        </div>
+        <form @submit.prevent="register" class="form-ajax">
+            <div class="form-group">
+                <label class="form-label" for="name">Họ và tên</label>
+                <input v-model="user.name" type="text" class="form-control form-control-lg" name="name" placeholder="Nhập Họ và tên" required="">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">Tài khoản</label>
+                <input v-model="user.username" type="text" class="form-control form-control-lg" name="username" placeholder="Nhập Tên đăng nhập" required="">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input v-model="user.email" type="email" class="form-control form-control-lg" name="email" placeholder="Dùng để lấy lại mật khẩu" required="">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">Mật khẩu</label>
+                <div class="form-control-wrap">
+                    <input v-model="user.password"  type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Nhập mật khẩu" required="">
+                    <a href="#" class="form-icon form-icon-right passcode-switch" data-target="password">
+                        <em class="passcode-icon icon-show icon ni ni-eye"></em>
+                        <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="custom-control custom-control-xs custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox" checked="">
+                    <label class="custom-control-label" for="checkbox">Tôi đồng ý với <a href="javascript:void(0)">Chính sách</a> &amp; <a href="javascript:void(0)"> Điều khoản.</a></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" v-on:click="registerUser()" class="btn btn-lg btn-primary btn-block">Đăng ký</button>
+            </div>
+        </form>
+        <div class="form-note-s2 text-center pt-4"> Bạn đã có tài khoản? <a href="/login"><strong>Đăng nhập</strong></a>
+        </div>
+
+    </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- wrap @e  -->
+            </div>
+            <!-- content @e  -->
+        </div>
+        <!-- main @e  -->
+    </div>
+    <!-- app-root @e  -->
+    <!-- JavaScript -->
+    <script src="/assets/js/register.js"></script> 
+</body>
+</html>

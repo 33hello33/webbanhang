@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="vi" class="js">
+ {{ template "header.html" }}
+
+<body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
+    <style>
+        .input-table{
+            background: transparent;
+            border: none;
+        }
+        .inline{
+            display: inline-block; 
+        }
+        #fixedbutton {
+            position: fixed;
+            bottom: 0px;
+            left: 50%;
+            width: 400px;
+        }
+    </style>
+    <div  id="root1">
+    {{template "menu.html"}}
+    </div>
+    <div class="nk-app-root" id="root">
+
+        <!-- main @s  -->
+        <div class="nk-main ">
+        <!-- wrap @s  -->
+        div class="nk-wrap nk-wrap-nosidebar">
+        <!-- content @s  -->
+        <div class="nk-content ">
+        <div class="nk-block nk-auth-body  wide-xs">
+
+        <div class="card">
+             <div class ="right-panel" style="width: 100%;" >
+                 <div class="data-table" style="padding: 20px 0 20px 0;">
+                     <table class="table table-bordered table-responsive-md table-striped text-center">
+                         <thead>
+                           <tr>
+                             <th class="text-center">ID</th>
+                             <th class="text-center">Ngày tạo</th>
+                             <th class="text-center">Khách hàng</th>
+                             <th class="text-center">Sdt</th>
+                             <th class="text-center">Tổng tiền</th>
+                             <th class="text-center">Đã trả</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                           <tr v-for="(invoice,invoiceIndex) in invoices">
+                             <td class="pt-3-half"><input class="input-table" disabled="true" v-model="invoice.id" ></td>
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.created_at"></td>
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.customers_name"></td>
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.customers_phone"></td>
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.total_money"></td>
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.had_paid"></td>
+                           </tr>
+                         </tbody>
+                       </table>
+                 </div>
+             </div>
+            </div>
+        </div>
+                </div>
+                <!-- wrap @e  -->
+            </div>
+            <!-- content @e  -->
+        </div>
+        <!-- main @e  -->
+    </div>
+    <script src="/assets/js/revenue.js"></script>
+    <script src="/assets/js/token.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="vi" class="js">
+  {{ template "header.html" }}
+
+<body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
+    {{template "menu.html"}}
+
+    <div class="nk-app-root" id="root">
+        <!-- main @s  -->
+        <div class="nk-main ">
+            <!-- wrap @s  -->
+            <div class="nk-wrap nk-wrap-nosidebar">
+                <!-- content @s  -->
+                <div class="nk-content ">
+                    <div class="nk-block nk-block-middle nk-auth-body  wide-xs">
+                        <div class="brand-logo pb-4 text-center">
+                            <a href="/" class="logo-link">
+                                <img class="logo-dark logo-img logo-img-lg" src="/assets/images/logo.png" alt="logo">
+                            </a>
+                        </div>
+                        <div class="card">
+                          <div class="card-inner card-inner-lg">
+        
+                            <div class="w3-sidebar w3-collapse" id="sidenav" style="top: 44px;display: none;">
+                              <div id="leftmenuinner" style="padding-top: 44px; width: 20%;">
+                                <div id="leftmenuinnerinner">
+                                  <input type="text" name="find" placeholder="Tìm kiếm" class="form-control form-control-lg"/>
+                                  <br>
+                                  <h2 target="_top" v-on:click="addCustomer()" class="addButton">thêm khách hàng</h2>
+                                  <br>
+                                  <h2 target="_top">ds khách hàng</h2>
+                                  <div class="list-leftmenu" v-for="(customer, customerIndex) in customers">
+                                    <a v-on:click="getDetailCustomer(customer, customerIndex)" target="_top" > @{ customer.name }</a>
+                                    <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="deletecCustomer(customer, customerIndex)" >x</button>
+                                  </div>
+                                  
+                                  <br><br>
+                                </div>
+                              </div>
+                          </div>
+                      
+                      <div class ="right-panel" style="width: 70%; float:right" >
+                          <div class="nk-block-head">
+                              <div class="nk-block-head-content">
+                                  <h4 class="nk-block-title" ref="headerCustomer" id="headerCustomer">Thêm Khách Hàng </h4>
+                              </div>
+                          </div>
+                          <form @submit.prevent="customer" class="form-ajax">
+                              <div class="form-group">
+                                  <label class="form-label" for="name">Tên khách hàng</label>
+                                  <input  type="text" v-model="customer.name" class="form-control form-control-lg" name="name" placeholder="Nhập tên khách hàng" required="">
+                              </div>
+                              <div class="form-group">
+                                  <label class="form-label" for="phone">Số Điện Thoại</label>
+                                  <input  type="text" v-model="customer.phone" class="form-control form-control-lg" name="phone" placeholder="Nhập số điện thoại" required="">
+                              </div>
+                              <div class="form-group">
+                                  <label class="form-label" for="address">Địa Chỉ</label>
+                                  <input  type="text" v-model="customer.address" class="form-control form-control-lg" name="address" placeholder="Nhập địa chỉ" required="">
+                              </div>
+                              
+                              <div class="form-group">
+                                  <button v-on:click="createCustomer(customer,customerIndex)" ref="buttonCustomer" id="buttonCustomer" type="button" class="btn btn-lg btn-primary btn-block">Thêm Khách Hàng</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- wrap @e  -->
+            </div>
+            <!-- content @e  -->
+        </div>
+        <!-- main @e  -->
+    </div>
+    <script src="/assets/js/customer.js"></script>
+
+</body>
+</html>

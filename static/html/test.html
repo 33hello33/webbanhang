@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi" class="js">
+    <head>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js"></script>
+    </head>
+<body>
+    <div id="app">
+        <input v-model="user.username">
+        <input v-model="user.password">
+    <button v-on:click="loginUser()">test</button>
+    </div>
+    <div id="root">
+    <button v-on:click="test()">test</button>
+    </div>
+</body>
+
+<script>
+    const { createApp, ref, computed } = Vue;
+  const app1 =  createApp({
+    delimiters: ['@{', '}'],
+    data() {
+      return {
+        showError : false,
+        user: {username: '', password: ''},
+      }
+    },
+    methods:{
+    test(){
+       console.log("1231");
+    },
+    loginUser(){
+      if (this.user.username == ''){
+        this.showError = true;
+      }else{
+        this.showError = false;
+        axios.post('login', {username: this.user.username, password: this.user.password}).then(response => {
+            console.log(response.data.token);
+          });      
+        }
+    },
+    }
+  })
+  app1.mount('#app')
+</script>
+<script>
+    const app2 = createApp({
+    methods:{
+        test(){
+        console.log("1231");
+        },
+    }
+    })
+    app2.mount('#root')
+</script>
+</html>

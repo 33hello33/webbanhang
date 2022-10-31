@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="vi" class="js">
+ {{ template "header.html" }}
+
+<body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
+    <style>
+        .input-table {
+            background: transparent;
+            width: 100%;
+            border: none;
+        }
+        .inline{
+            display: inline-block; 
+        }
+        #fixedbutton {
+            position: fixed;
+            bottom: 0px;
+            left: 50%;
+            width: 400px;
+        }
+    </style>
+    {{template "menu.html"}}
+
+    <div class="nk-app-root" id="root">
+        <!-- main @s  -->
+        <div class="nk-main ">
+            <!-- wrap @s  -->
+            <div class="nk-wrap nk-wrap-nosidebar">
+                <!-- content @s  -->
+                <div class="nk-content ">
+                    <div class="nk-block nk-auth-body  wide-xs">
+
+        <div class="card">
+           <div class="card-inner card-inner-lg">
+                <div class="w3-sidebar w3-collapse" id="sidenav" style="top: 44px;display: none;">
+                    <div id="leftmenuinner" style="padding-top: 44px; width: 20%;">
+                    <div id="leftmenuinnerinner">
+                        <input type="text" name="find" placeholder="Tìm kiếm" class="form-control form-control-lg"/>
+                        <br>
+                        <h2 target="_top">ds sản phẩm</h2>
+                        <div class="list-leftmenu" v-for="(product, productIndex) in products">
+                        <a v-on:dblclick="getDetailProduct(product, productIndex)" target="_top"  >@{ product.name }</a>
+                        </div>
+                        
+                        <br><br>
+                    </div>
+                    </div>
+                </div>
+                <div class ="right-panel" style="width: 70%; float:right" >
+                    <div class="info-customer">
+                        <h2>Thông tin khách hàng</h2>
+                        <div>
+                            <div class="inline">
+                                <div>
+                                    <label>Tên</label>
+                                    <input name="customer-name" v-model="customer.name">
+                                </div>  
+                                <div>
+                                    <label>Sdt</label>
+                                    <input name="customer-phone" v-model="customer.phone">
+                                </div>      
+                            </div>
+                            <div class="inline">
+                                <div> 
+                                    <label>Địa chỉ</label>
+                                    <input name="customer-address" v-model="customer.address">
+                                </div>   
+                                <div>
+                                    <label>Ghi chú</label>
+                                    <input name="customer-notes">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-table" style="padding: 20px 0 20px 0;">
+                            <table class="table table-bordered table-responsive-md table-striped text-center">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center">Tên SP</th>
+                                    <th class="text-center">SL</th>
+                                    <th class="text-center">DVT</th>
+                                    <th class="text-center">Đơn Giá</th>
+                                    <th class="text-center">Tổng Tiền</th>
+                                    <th class="text-center">CK %</th>
+                                    <th class="text-center">Thành Tiền</th>
+                                    <th class="text-center">Xóa</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr v-for="(productTbl,productindexTbl) in productTbls" @keyup="onchangeTable(productindexTbl)" :key="resetKey">
+                                    <td class="pt-3-half" ><input  class="input-table" v-model="productTbl.name" readonly="readonly"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.amount"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.unit" readonly="readonly"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.price"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.total_price" readonly="readonly"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.discount"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.last_price" readonly="readonly"></td>
+                                    <td>
+                                      <span class="table-remove">
+                                        <button type="button" v-on:click="deleteRow(productindexTbl)" 
+                                            class="btn btn-danger btn-rounded btn-sm my-0">Remove
+                                        </button>
+                                    </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                        </div>
+                    </div>
+                    <div class="info-paid" style="float: right">
+                        <label class="inline">Thành Tiền:</label>
+                        <a class="inline">@{total_money_to_pay}</a> 
+                    </div>
+                    <div class="info-paid" style="float: right">
+                        <label class="inline">Đã Trả:</label>
+                        <input class="inline" v-model="invoice.had_paid">
+                    </div>
+                    <div class="btn-pay">
+                        <button v-on:click="paidInvoice()" type="button" id="fixedbutton" class="btn btn-lg btn-primary btn-block">Thanh toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+                </div>
+                <!-- wrap @e  -->
+            </div>
+            <!-- content @e  -->
+        </div>
+        <!-- main @e  -->
+    </div>
+</div>
+    <script src="/assets/js/invoice.js"></script>
+</body>
+</html>

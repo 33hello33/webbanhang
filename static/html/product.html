@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi" class="js">
+ {{ template "header.html" }}
+
+<body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
+    {{template "menu.html"}}
+
+    <div class="nk-app-root" id="root">
+        <!-- main @s  -->
+        <div class="nk-main ">
+            <!-- wrap @s  -->
+            <div class="nk-wrap nk-wrap-nosidebar">
+                <!-- content @s  -->
+                <div class="nk-content ">
+                    <div class="nk-block nk-block-middle nk-auth-body  wide-xs">
+                        <div class="brand-logo pb-4 text-center">
+                            <a href="/" class="logo-link">
+                                <img class="logo-dark logo-img logo-img-lg" src="/assets/images/logo.png" alt="logo">
+                            </a>
+                        </div>
+        <div class="card">
+           <div class="card-inner card-inner-lg">
+                <div class="w3-sidebar w3-collapse" id="sidenav" style="top: 44px;display: none;">
+                    <div id="leftmenuinner" style="padding-top: 44px; width: 20%;">
+                    <div id="leftmenuinnerinner">
+                        <input type="text" name="find" placeholder="Tìm kiếm" class="form-control form-control-lg"/>
+                        <br>
+                        <h2 target="_top" v-on:click="addProduct()" class="addButton">thêm sản phẩm</h2>
+                        <br>
+                        <h2 target="_top">ds sản phẩm</h2>
+                        <div class="list-leftmenu" v-for="(product, productIndex) in products">
+                        <a v-on:click="getDetailProduct(product, productIndex)" target="_top"  >@{ product.name }</a>
+                        <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="deleteProduct(product, productIndex)" >x</button>
+                        </div>
+                        
+                        <br><br>
+                    </div>
+                    </div>
+                </div>
+                <div class ="right-panel" style="width: 70%; float:right" >
+                <div class="nk-block-head">
+                    <div class="nk-block-head-content">
+                        <h4 class="nk-block-title" ref="headerProduct" id="headerProduct">Thêm Sản Phẩm</h4>
+                    </div>
+                </div>
+                <form class="form-ajax">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Tên Sản Phẩm</label>
+                        <input v-model="product.name" type="text" class="form-control form-control-lg" name="name" placeholder="Nhập tên sản phẩm" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="unit">Đơn Vị Tính</label>
+                        <input v-model="product.unit" type="text" class="form-control form-control-lg" name="unit" placeholder="Nhập đơn vị tính của sp" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="price_import">Giá Nhập</label>
+                        <input v-model="product.price_import" type="number" class="form-control form-control-lg" name="price_import" placeholder="Giá nhập sản phẩm" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="price">Giá Bán</label>
+                        <input v-model="product.price" type="number" class="form-control form-control-lg" name="price" placeholder="Giá bán sản phẩm" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="amount" >Số Lượng</label>
+                        <input v-model="product.amount" type="number" class="form-control form-control-lg" name="amount" placeholder="Số lượng sản phẩm nhập vào" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="warehouse">Kho</label>
+                        <input v-model="product.warehouse" type="text" class="form-control form-control-lg" name="warehouse" placeholder="Kho để sản phẩm" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="id_supplier">Nhà Cung Cấp</label>
+                        <!--<input v-model="product.id_supplier" type="number" class="form-control form-control-lg" name="id_supplier" placeholder="Dùng để lấy lại mật khẩu" required=""> -->
+                        <select class="form-control" v-model="product.id_supplier" >
+                             <option v-for="(supplier, supplierIndex) in suppliers" v-bind:value="supplier.id">@{supplier.name}</option> 
+                        </select>
+                        
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" ref="buttonProduct" id="buttonProduct" v-on:click="createProduct(product, productIndex)" class="btn btn-lg btn-primary btn-block">Thêm Sản Phẩm</button>
+                    </div>
+                </form>
+                </div>
+        </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- wrap @e  -->
+            </div>
+            <!-- content @e  -->
+        </div>
+        <!-- main @e  -->
+    </div>
+
+    <script src="/assets/js/product.js"></script>
+</body>
+</html>
