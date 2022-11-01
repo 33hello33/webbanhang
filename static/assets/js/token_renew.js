@@ -1,3 +1,4 @@
+
 const {createApp} = Vue
 appTokenRenew = createApp({
     delimiters: ['@{', '}'],
@@ -7,7 +8,7 @@ appTokenRenew = createApp({
       axios.post('/token/renew', {"refresh_token" : refresh_token}).then( response =>{
         if(response.status == 200){
           token = response.data.token;
-          document.cookie ='token= '+ token;
+          $cookies.set('token', token);
           window.location.href = '/';          
         }
       })

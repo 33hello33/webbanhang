@@ -18,7 +18,7 @@ type renewTokenResponse struct {
 }
 
 func (server *Server) renewTokenHandler(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "renew_token.html", nil)
+	ctx.HTML(http.StatusOK, "token_renew.html", nil)
 }
 
 func (server *Server) renewToken(ctx *gin.Context) {

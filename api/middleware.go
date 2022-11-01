@@ -14,7 +14,6 @@ const authorizationPayloadKey = "authorization_payload"
 func authMiddleware(tokenMaker token.PasetoMaker) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		cookie, err := ctx.Cookie("token")
-
 		if err != nil {
 			err := errors.New("authorization header is not provided")
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errResponse(err))

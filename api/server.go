@@ -2,17 +2,11 @@ package api
 
 import (
 	"net/http"
-	"time"
 	db "webbanhang/db/sqlc"
 	"webbanhang/token"
 	"webbanhang/util"
 
 	"github.com/gin-gonic/gin"
-)
-
-const (
-	TOKEN_SYMETRIC_KEY    string        = "12345678912345678912345678912345"
-	ACCESS_TOKEN_DURATION time.Duration = 15
 )
 
 type Server struct {
@@ -23,7 +17,7 @@ type Server struct {
 }
 
 func NewServer(store *db.Store, config util.Config) (*Server, error) {
-	tokenMaker, err := token.NewPasetoMaker(TOKEN_SYMETRIC_KEY)
+	tokenMaker, err := token.NewPasetoMaker(config.TokenSymetricKey)
 	if err != nil {
 		return nil, err
 	}

@@ -26,14 +26,15 @@ appProduct = createApp({
       });
     },
     createProduct(product, productIndex){
+
           axios.post('product/create',{
-            name: product.name, 
-            unit: product.unit, 
-            amount: product.amount, 
-            price: product.price, 
-            price_import: product.price_import, 
-            warehouse: product.warehouse, 
-            id_supplier: product.id_supplier}).then(response => {
+            'name': product.name, 
+            'unit': product.unit, 
+            'amount': product.amount, 
+            'price': product.price, 
+            'price_import': product.price_import, 
+            'warehouse': product.warehouse, 
+            'id_supplier': product.id_supplier}).then(response => {
             if(response.status == 200){
                 this.listProduct();
             }else{

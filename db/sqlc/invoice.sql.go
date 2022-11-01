@@ -147,7 +147,7 @@ func (q *Queries) GetInvoiceDetail(ctx context.Context, invoiceID int64) ([]Invo
 
 const listInvoice = `-- name: ListInvoice :many
 select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
-on invoices.customers_phone = customers.phone
+on invoices.customers_id = customers.id
 `
 
 type ListInvoiceRow struct {

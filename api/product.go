@@ -11,9 +11,9 @@ import (
 type createProductRequest struct {
 	Name        string `json:"name"`
 	Unit        string `json:"unit"`
-	PriceImport int64  `json:"price_import,string"`
-	Amount      int64  `json:"amount,string"`
-	Price       int64  `json:"price,string"`
+	PriceImport int64  `json:"price_import"`
+	Amount      int64  `json:"amount"`
+	Price       int64  `json:"price"`
 	WareHouse   string `json:"warehouse"`
 	IdSupplier  int64  `json:"id_supplier"`
 }

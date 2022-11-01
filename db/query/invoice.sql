@@ -13,7 +13,7 @@ where id = $1 limit 1;
 
 -- name: ListInvoice :many
 select invoices.*, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
-on invoices.customers_phone = customers.phone ;
+on invoices.customers_id = customers.id ;
 
 -- name: CreateInvoiceDetail :one
 insert into invoice_detail(
