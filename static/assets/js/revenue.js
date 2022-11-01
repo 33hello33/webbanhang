@@ -2,8 +2,8 @@ appRevenue = createApp({
     delimiters: ['@{', '}'],
     data(){
       return {
-        //invo: {id: 0, created_at: '', total_money: 0, had_paid: 0, cutomers_name: '', customers_phone:''},
-        invoices: null,
+        invoice: {id: 0, created_at: '', total_money: 0, had_paid: 0, cutomer_name: '', customer_phone:''},
+        invoices: [],
       }
     },
     methods: {

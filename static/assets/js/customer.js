@@ -16,21 +16,22 @@ const appCustomer = createApp({
     createCustomer(customer, customerIndex) {
       if(this.isUpdate == false){
           // create new customer
-          axios.post('customer/create',{
-            name: customer.name, 
-            address: customer.address.String, 
-            phone: customer.phone}).then(response => {
+          if (customer.address.String) {
+            customer.address.Valid = true;
+          }
+          axios.post('customer/create', customer)
+          .then(response => {
             if(response.status == 200){
               this.listCustomer();
             }
           });
       }else{
         // update customer
-        axios.put('customer/' + customer.id,{
-            id: customer.id,
-            name: customer.name, 
-            address: customer.address.String, 
-            phone: customer.phone}).then(response => {
+        if (customer.address.String) {
+          customer.address.Valid = true;
+        }
+        axios.put('customer/' + customer.id, customer)
+        .then(response => {
             if(response.status == 200){
               this.listCustomer();
             }
@@ -55,7 +56,7 @@ const appCustomer = createApp({
       this.changeHeader();
       axios.get('customer/'+customer.id).then(response =>{
         if(response.status == 200){
-          this.customer =  response.data;
+          this.customer = response.data;
         }
       })
     },

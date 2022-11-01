@@ -31,7 +31,7 @@
                                   <h2 target="_top">ds khách hàng</h2>
                                   <div class="list-leftmenu" v-for="(customer, customerIndex) in customers">
                                     <a v-on:click="getDetailCustomer(customer, customerIndex)" target="_top" > @{ customer.name }</a>
-                                    <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click="deletecCustomer(customer, customerIndex)" >x</button>
+                                    <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click="deleteCustomer(customer, customerIndex)" >x</button>
                                   </div>
                                   
                                   <br><br>

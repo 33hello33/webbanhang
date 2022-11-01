@@ -2,8 +2,8 @@ appInvoice = createApp({
     delimiters: ['@{', '}'],
     data() {
       return {
-        customer: {name: '', phone: '', address:''},
-        invoice:{customer_phone: '', total_money: 0, had_paid:0},
+        customer: {name: '', phone: '', address: {String: '', Valid: false}},
+        invoice:{customer_id: '', total_money: 0, had_paid:0},
         product: {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0},
         products: [],
         productTbl: {id: 0, name: '', unit: '', amount: 0, price: 0, total_price: 0, discount: 0, last_price: 0},
@@ -21,7 +21,7 @@ appInvoice = createApp({
           }
         })
         .catch(error => {
-          alert(error.data.Error);
+          console.log('get list product err: ' + error.data.Error);
           });   
       },
       getDetailProduct(product, productIndex){
@@ -56,23 +56,24 @@ appInvoice = createApp({
       },
       paidInvoice(){
         // send info customer, if not exist, create new customer
-        this.invoice.customer_phone = this.customer.phone;
-        this.invoice.total_money = this.total_money_to_pay;
-        axios.post('customer', this.customer).then(response =>{
+        axios.post('customer/create', this.customer).then(response =>{
           if(response.status = 200){
             // send info invoice, all product of invoice
-            axios.post('invoice', {"invoice" : this.invoice, "products": this.productTbls}).then(response =>{
+            this.invoice.customer_id = response.data.id;
+            this.invoice.total_money = this.total_money_to_pay;
+
+            axios.post('invoice/create', {"invoice" : this.invoice, "products": this.productTbls}).then(response =>{
               if(response.status = 200){
                 this.reset();
               }
             })
             .catch(error => {
-              alert(error.data.Error);
+              console.log('create invoice err: ' +  error.data.Error);
               });   
           }
         })
-        .catch(error => {
-          alert(error.data.Error);
+        .catch(error1 => {
+          console.log('create customer err: ' + error1.data.Error);
           });   
       },
       reset(){

@@ -16,23 +16,16 @@ appSupplier = createApp({
     createSupplier(supplier, supplierIndex) {
       if(this.isUpdate == false){
           // create new supplier
-          axios.post('supplier/create',{
-            name: supplier.name, 
-            address: supplier.address, 
-            phone: supplier.phone, 
-            notes: supplier.notes}).then(response => {
+          axios.post('supplier/create', supplier)
+          .then(response => {
             if(response.status == 200){
               this.listSupplier();
             }
           });
       }else{
         // update supplier
-        axios.put('supplier/' + supplier.id,{
-            id: supplier.id,
-            name: supplier.name, 
-            address: supplier.address, 
-            phone: supplier.phone, 
-            notes: supplier.notes}).then(response => {
+        axios.put('supplier/' + supplier.id, supplier)
+        .then(response => {
             if(response.status == 200){
               this.listSupplier();
             }

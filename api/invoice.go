@@ -15,15 +15,15 @@ func (server *Server) revenueHandler(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "revenue.html", gin.H{"title": "revenue"})
 }
 
-type createInvoiceRequest struct {
-	Invoice  Invoice         `json:"invoice"`
-	Products []db.ProductTbl `json:"products"`
-}
-
 type Invoice struct {
 	CustomerID int64 `json:"customer_id"`
 	TotalMoney int64 `json:"total_money"`
-	HadPaid    int64 `json:"had_paid,string"`
+	HadPaid    int64 `json:"had_paid"`
+}
+
+type createInvoiceRequest struct {
+	Invoice  Invoice         `json:"invoice"`
+	Products []db.ProductTbl `json:"products"`
 }
 
 func (server *Server) createInvoice(ctx *gin.Context) {

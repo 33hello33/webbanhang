@@ -1,6 +1,8 @@
 [fix ok] log out : vẫn ra trang token/renew sau khi hết hạn, cần điều hướng ra login (lỗi do axios nhận error qua kênh khác)
 
-sửa : sản phẩm update số lượng ra thêm 1 sp mới 
+[fix ok] sửa : sản phẩm update số lượng ra thêm 1 sp mới 
+
+[fix ok] sửa : axios post lại theo struct
 
 refresh token mượt như fb >> tips javascript
 

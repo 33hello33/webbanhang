@@ -2,7 +2,6 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	db "webbanhang/db/sqlc"
 
@@ -151,7 +150,6 @@ type updateProductRequest struct {
 func (server *Server) updateProduct(ctx *gin.Context) {
 	var req updateProductRequest
 	err := ctx.ShouldBind(&req)
-	fmt.Println(req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errResponse(err))
 		return

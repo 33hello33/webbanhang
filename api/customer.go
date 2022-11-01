@@ -3,7 +3,6 @@ package api
 import (
 	"database/sql"
 	"net/http"
-	"strings"
 	db "webbanhang/db/sqlc"
 
 	"github.com/gin-gonic/gin"
@@ -13,13 +12,18 @@ func (server *Server) customerHandler(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "customer.html", gin.H{"title": "customer"})
 }
 
+type StringNull struct {
+	String string `json:"String"`
+	Valid  bool   `json:"Valid"`
+}
 type createCustomerRequest struct {
-	Name    string `json:"name"`
-	Phone   string `json:"phone"`
-	Address string `json:"address"`
+	Name    string     `json:"name"`
+	Phone   string     `json:"phone"`
+	Address StringNull `json:"address"`
 }
 
 func (server *Server) createCustomer(ctx *gin.Context) {
+	var customer db.Customer
 	var req createCustomerRequest
 	err := ctx.ShouldBind(&req)
 	if err != nil {
@@ -34,21 +38,27 @@ func (server *Server) createCustomer(ctx *gin.Context) {
 		req.Name = "Khách vãng lai"
 	}
 
-	arg := db.CreateCustomerParams{
-		Name:    req.Name,
-		Phone:   req.Phone,
-		Address: sql.NullString{String: req.Address, Valid: req.Address != ""},
-	}
-	_, err = server.store.CreateCustomer(ctx, arg)
+	customer, err = server.store.GetCustomerByPhone(ctx, req.Phone)
 	if err != nil {
-		if strings.Contains(err.Error(), "duplicate") == true {
-			ctx.JSON(http.StatusOK, nil)
+		if err == sql.ErrNoRows {
+			arg := db.CreateCustomerParams{
+				Name:    req.Name,
+				Phone:   req.Phone,
+				Address: sql.NullString(req.Address),
+			}
+
+			customer, err = server.store.CreateCustomer(ctx, arg)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, errResponse(err))
+				return
+			}
+		} else {
+			ctx.JSON(http.StatusInternalServerError, errResponse(err))
 			return
 		}
-		ctx.JSON(http.StatusInternalServerError, errResponse(err))
-		return
 	}
-	ctx.JSON(http.StatusOK, nil)
+
+	ctx.JSON(http.StatusOK, customer)
 }
 
 func (server *Server) listCustomer(ctx *gin.Context) {
@@ -103,10 +113,10 @@ func (server *Server) deleteCustomer(ctx *gin.Context) {
 }
 
 type updateCustomerRequest struct {
-	ID      int64  `json:"id"`
-	Name    string `json:"name"`
-	Phone   string `json:"phone"`
-	Address string `json:"address"`
+	ID      int64      `json:"id"`
+	Name    string     `json:"name"`
+	Phone   string     `json:"phone"`
+	Address StringNull `json:"address"`
 }
 
 func (server *Server) updateCustomer(ctx *gin.Context) {
@@ -120,7 +130,7 @@ func (server *Server) updateCustomer(ctx *gin.Context) {
 	_, err = server.store.UpdateCustomer(ctx, db.UpdateCustomerParams{
 		ID:      req.ID,
 		Name:    req.Name,
-		Address: sql.NullString{String: req.Address, Valid: req.Address != ""},
+		Address: sql.NullString(req.Address),
 		Phone:   req.Phone,
 	})
 	if err != nil {

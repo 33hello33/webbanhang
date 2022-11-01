@@ -19,6 +19,10 @@ where id=$1;
 select * from customers
 where id = $1 limit 1;
 
+-- name: GetCustomerByPhone :one
+select * from customers
+where phone = $1 limit 1;
+
 -- name: UpdateCustomer :one
 update customers 
 set name = $2, address = $3, phone = $4
