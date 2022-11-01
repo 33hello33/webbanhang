@@ -1,4 +1,3 @@
-const {createApp} = Vue
 appRevenue = createApp({
     delimiters: ['@{', '}'],
     data(){
@@ -12,10 +11,11 @@ appRevenue = createApp({
         axios.get('invoice/list').then(response =>{
           if(response.status == 200){
             this.invoices = response.data;
-          }else{
-            console.log(response.data);
           }
-        });
+        })
+        .catch(error => {
+          alert(error.data.Error);
+          });   
       },
       getDetailInvoice(invoiceIndex){
         axios.get('invoice/' + invoice.id).then(response =>{

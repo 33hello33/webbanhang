@@ -1,4 +1,3 @@
-const {createApp} = Vue
 appSupplier = createApp({
     delimiters: ['@{', '}'],
     data() {

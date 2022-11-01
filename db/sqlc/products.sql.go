@@ -152,7 +152,9 @@ set amount = $2,
 price = $3, 
 price_import = $4, 
 warehouse = $5,
-id_supplier = $6
+id_supplier = $6,
+unit = $7,
+name = $8
 where id = $1
 returning id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier
 `
@@ -164,6 +166,8 @@ type UpdateProductParams struct {
 	PriceImport int64         `json:"price_import"`
 	Warehouse   string        `json:"warehouse"`
 	IDSupplier  sql.NullInt64 `json:"id_supplier"`
+	Unit        string        `json:"unit"`
+	Name        string        `json:"name"`
 }
 
 func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (Product, error) {
@@ -174,6 +178,8 @@ func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (P
 		arg.PriceImport,
 		arg.Warehouse,
 		arg.IDSupplier,
+		arg.Unit,
+		arg.Name,
 	)
 	var i Product
 	err := row.Scan(

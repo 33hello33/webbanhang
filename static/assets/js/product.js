@@ -1,4 +1,3 @@
-const {createApp} = Vue
 appProduct = createApp({
   delimiters: ['@{', '}'],
   data() {
@@ -20,27 +19,32 @@ appProduct = createApp({
         if(response.status == 200){
           this.products = response.data;
           this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
-        }else{
-          console.log(response.data);
         }
-      });
+      })
+      .catch(error => {
+        alert(error.data.Error);
+        });   
     },
     createProduct(product, productIndex){
-
-          axios.post('product/create',{
-            'name': product.name, 
-            'unit': product.unit, 
-            'amount': product.amount, 
-            'price': product.price, 
-            'price_import': product.price_import, 
-            'warehouse': product.warehouse, 
-            'id_supplier': product.id_supplier}).then(response => {
-            if(response.status == 200){
-                this.listProduct();
-            }else{
-              console.log(response.data);
-            }
-          });
+      if(this.isUpdate == false){ // create product
+        axios.post('product/create',product)
+        .then(response => {
+          if(response.status == 200){
+              this.listProduct();
+          }
+        })
+        .catch(error => {
+          alert(error.data.Error);
+          });   
+      }
+      else{ // update product
+        axios.put('product/update', product)
+        .then(  response => {
+          if (response.status == 200){
+          this.listProduct();
+        }
+      })
+      }
     },
     checkForEnter(event){
       if (event.key == "Enter") {

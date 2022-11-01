@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	db "webbanhang/db/sqlc"
 
@@ -134,4 +135,41 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		IdSupplier:  product.IDSupplier.Int64,
 	}
 	ctx.JSON(http.StatusOK, res)
+}
+
+type updateProductRequest struct {
+	ID          int64  `json:"ID"`
+	Name        string `json:"name"`
+	Unit        string `json:"unit"`
+	PriceImport int64  `json:"price_import"`
+	Amount      int64  `json:"amount"`
+	Price       int64  `json:"price"`
+	WareHouse   string `json:"warehouse"`
+	IdSupplier  int64  `json:"id_supplier"`
+}
+
+func (server *Server) updateProduct(ctx *gin.Context) {
+	var req updateProductRequest
+	err := ctx.ShouldBind(&req)
+	fmt.Println(req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	_, err = server.store.UpdateProduct(ctx, db.UpdateProductParams{
+		ID:          req.ID,
+		Amount:      req.Amount,
+		Price:       req.Amount,
+		PriceImport: req.PriceImport,
+		Warehouse:   req.WareHouse,
+		IDSupplier:  sql.NullInt64{Int64: req.IdSupplier, Valid: req.IdSupplier != 0},
+		Unit:        req.Unit,
+		Name:        req.Name,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, nil)
 }

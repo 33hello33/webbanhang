@@ -1,4 +1,3 @@
-const {createApp} = Vue;
 appInvoice = createApp({
     delimiters: ['@{', '}'],
     data() {
@@ -19,10 +18,11 @@ appInvoice = createApp({
           if(response.status == 200){
             this.products = response.data;
             this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
-          }else{
-            console.log(response.data);
           }
-        });
+        })
+        .catch(error => {
+          alert(error.data.Error);
+          });   
       },
       getDetailProduct(product, productIndex){
         axios.get('product/' + product.id).then(response =>{
@@ -64,14 +64,16 @@ appInvoice = createApp({
             axios.post('invoice', {"invoice" : this.invoice, "products": this.productTbls}).then(response =>{
               if(response.status = 200){
                 this.reset();
-              }else{
-                console.log(response.data);
               }
             })
-          }else{
-            console.log(response.data);
+            .catch(error => {
+              alert(error.data.Error);
+              });   
           }
         })
+        .catch(error => {
+          alert(error.data.Error);
+          });   
       },
       reset(){
         this.productTbls = [];

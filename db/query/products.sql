@@ -30,7 +30,9 @@ set amount = $2,
 price = $3, 
 price_import = $4, 
 warehouse = $5,
-id_supplier = $6
+id_supplier = $6,
+unit = $7,
+name = $8
 where id = $1
 returning *;
 

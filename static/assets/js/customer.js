@@ -1,4 +1,3 @@
-const { createApp } = Vue;
 const appCustomer = createApp({
     delimiters: ['@{', '}'],
     data(){

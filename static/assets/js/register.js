@@ -1,4 +1,3 @@
-const {createApp} = Vue
 appRegister = createApp({
   delimiters: ['&{', '}'],
   data() {
