@@ -4,12 +4,18 @@
 
 [fix ok] sửa : axios post lại theo struct
 
+[fix ok] invoice : create_at default y chang nhau
+
+[fix ok] filter on revenue : vẫn chưa lọc dc
+
+get detail invoice
+
 refresh token mượt như fb >> tips javascript
 
 search on all page
 autocomplete
 
-filter on revenue : from date 
+
 sum total money
 
 write unit test 

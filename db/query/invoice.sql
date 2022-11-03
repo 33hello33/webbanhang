@@ -31,3 +31,8 @@ insert into invoice_detail(
 -- name: GetInvoiceDetail :many
 select * from invoice_detail
 where invoice_id = $1;
+
+-- name: FindInvoice :many
+select invoices.*, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
+on invoices.customers_id = customers.id 
+where created_at between $1 and $2;

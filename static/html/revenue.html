@@ -10,6 +10,8 @@
         }
         .inline{
             display: inline-block; 
+            margin-left: 10px;
+            margin-right: 10px;
         }
         #fixedbutton {
             position: fixed;
@@ -32,6 +34,12 @@
         <div class="nk-block nk-auth-body  wide-xs">
 
         <div class="card">
+            <div class="date">
+                <a>Từ ngày</a> <input type="date" id="from_date" name="from_date" v-model="from_date" class="inline">
+                <a>Đến ngày</a> <input type="date" id="to_date" name="to_date" v-model="to_date" class="inline">
+                <button v-on:click="findInvoices()" class="inline">Tìm</button>
+            </div>
+        
              <div class ="right-panel" style="width: 100%;" >
                  <div class="data-table" style="padding: 20px 0 20px 0;">
                      <table class="table table-bordered table-responsive-md table-striped text-center">

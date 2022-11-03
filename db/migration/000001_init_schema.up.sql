@@ -3,7 +3,7 @@ CREATE TABLE "accounts" (
   "full_name" varchar NOT NULL,
   "hash_password" varchar NOT NULL,
   "email" varchar NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT 'now()'
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "products" (
@@ -14,7 +14,7 @@ CREATE TABLE "products" (
   "amount" bigint NOT NULL DEFAULT 0,
   "price" bigint NOT NULL DEFAULT 0,
   "warehouse" varchar NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT 'now()',
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
   "id_supplier" bigserial
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE "customers" (
 
 CREATE TABLE "invoices" (
   "id" bigserial PRIMARY KEY,
-  "created_at" timestamptz NOT NULL DEFAULT 'now()',
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
   "customers_id"  bigserial NOT NULL,
   "total_money" bigint NOT NULL,
   "had_paid" bigint NOT NULL,

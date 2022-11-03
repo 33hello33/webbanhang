@@ -89,6 +89,60 @@ func (q *Queries) CreateInvoiceDetail(ctx context.Context, arg CreateInvoiceDeta
 	return i, err
 }
 
+const findInvoice = `-- name: FindInvoice :many
+select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
+on invoices.customers_id = customers.id 
+where created_at between $1 and $2
+`
+
+type FindInvoiceParams struct {
+	CreatedAt   time.Time `json:"created_at"`
+	CreatedAt_2 time.Time `json:"created_at_2"`
+}
+
+type FindInvoiceRow struct {
+	ID            int64           `json:"id"`
+	CreatedAt     time.Time       `json:"created_at"`
+	CustomersID   int64           `json:"customers_id"`
+	TotalMoney    int64           `json:"total_money"`
+	HadPaid       int64           `json:"had_paid"`
+	IsDeleted     bool            `json:"is_deleted"`
+	CustomerName  json.RawMessage `json:"customer_name"`
+	CustomerPhone json.RawMessage `json:"customer_phone"`
+}
+
+func (q *Queries) FindInvoice(ctx context.Context, arg FindInvoiceParams) ([]FindInvoiceRow, error) {
+	rows, err := q.db.QueryContext(ctx, findInvoice, arg.CreatedAt, arg.CreatedAt_2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []FindInvoiceRow
+	for rows.Next() {
+		var i FindInvoiceRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.CustomersID,
+			&i.TotalMoney,
+			&i.HadPaid,
+			&i.IsDeleted,
+			&i.CustomerName,
+			&i.CustomerPhone,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getInvoice = `-- name: GetInvoice :one
 select id, created_at, customers_id, total_money, had_paid, is_deleted from invoices
 where id = $1 limit 1

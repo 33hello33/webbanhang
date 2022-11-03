@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"time"
 	db "webbanhang/db/sqlc"
 
 	"github.com/gin-gonic/gin"
@@ -49,6 +50,43 @@ func (server *Server) createInvoice(ctx *gin.Context) {
 
 func (server *Server) listInvoice(ctx *gin.Context) {
 	invoices, err := server.store.ListInvoice(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, invoices)
+}
+
+type findInvoiceRequest struct {
+	FromDate string `json:"from_date"`
+	ToDate   string `json:"to_date"`
+}
+
+func (server *Server) findInvoice(ctx *gin.Context) {
+	var req findInvoiceRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	fromDate, err := time.Parse("2006-01-02", req.FromDate)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	toDate, err := time.Parse("2006-01-02", req.ToDate)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	invoices, err := server.store.FindInvoice(ctx, db.FindInvoiceParams{
+		CreatedAt:   fromDate,
+		CreatedAt_2: toDate,
+	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
