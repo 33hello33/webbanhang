@@ -89,18 +89,18 @@ func (q *Queries) CreateInvoiceDetail(ctx context.Context, arg CreateInvoiceDeta
 	return i, err
 }
 
-const findInvoice = `-- name: FindInvoice :many
+const findInvoiceFromDate = `-- name: FindInvoiceFromDate :many
 select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
 on invoices.customers_id = customers.id 
 where created_at between $1 and $2
 `
 
-type FindInvoiceParams struct {
+type FindInvoiceFromDateParams struct {
 	CreatedAt   time.Time `json:"created_at"`
 	CreatedAt_2 time.Time `json:"created_at_2"`
 }
 
-type FindInvoiceRow struct {
+type FindInvoiceFromDateRow struct {
 	ID            int64           `json:"id"`
 	CreatedAt     time.Time       `json:"created_at"`
 	CustomersID   int64           `json:"customers_id"`
@@ -111,15 +111,15 @@ type FindInvoiceRow struct {
 	CustomerPhone json.RawMessage `json:"customer_phone"`
 }
 
-func (q *Queries) FindInvoice(ctx context.Context, arg FindInvoiceParams) ([]FindInvoiceRow, error) {
-	rows, err := q.db.QueryContext(ctx, findInvoice, arg.CreatedAt, arg.CreatedAt_2)
+func (q *Queries) FindInvoiceFromDate(ctx context.Context, arg FindInvoiceFromDateParams) ([]FindInvoiceFromDateRow, error) {
+	rows, err := q.db.QueryContext(ctx, findInvoiceFromDate, arg.CreatedAt, arg.CreatedAt_2)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []FindInvoiceRow
+	var items []FindInvoiceFromDateRow
 	for rows.Next() {
-		var i FindInvoiceRow
+		var i FindInvoiceFromDateRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
@@ -262,4 +262,22 @@ func (q *Queries) ListInvoice(ctx context.Context) ([]ListInvoiceRow, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const sumToTalFromDate = `-- name: SumToTalFromDate :one
+select sum(total_money)
+from invoices
+where created_at between $1 and $2
+`
+
+type SumToTalFromDateParams struct {
+	CreatedAt   time.Time `json:"created_at"`
+	CreatedAt_2 time.Time `json:"created_at_2"`
+}
+
+func (q *Queries) SumToTalFromDate(ctx context.Context, arg SumToTalFromDateParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, sumToTalFromDate, arg.CreatedAt, arg.CreatedAt_2)
+	var sum int64
+	err := row.Scan(&sum)
+	return sum, err
 }

@@ -34,7 +34,12 @@ from invoice_detail left join products
 on invoice_detail.product_id = products.id
 where invoice_id = $1;
 
--- name: FindInvoice :many
+-- name: FindInvoiceFromDate :many
 select invoices.*, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
 on invoices.customers_id = customers.id 
+where created_at between $1 and $2;
+
+-- name: SumToTalFromDate :one
+select sum(total_money)
+from invoices
 where created_at between $1 and $2;

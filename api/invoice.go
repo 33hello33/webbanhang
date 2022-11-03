@@ -63,6 +63,11 @@ type findInvoiceRequest struct {
 	ToDate   string `json:"to_date"`
 }
 
+type findInvoiceResponse struct {
+	SumTotal int64                       `json:"sum_total"`
+	Invoices []db.FindInvoiceFromDateRow `json:"invoices"`
+}
+
 func (server *Server) findInvoice(ctx *gin.Context) {
 	var req findInvoiceRequest
 	err := ctx.ShouldBindJSON(&req)
@@ -86,7 +91,7 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 	// add 1 day to find, because date only set by time 00:00:00
 	toDate = toDate.AddDate(0, 0, 1)
 
-	invoices, err := server.store.FindInvoice(ctx, db.FindInvoiceParams{
+	invoices, err := server.store.FindInvoiceFromDate(ctx, db.FindInvoiceFromDateParams{
 		CreatedAt:   fromDate,
 		CreatedAt_2: toDate,
 	})
@@ -95,7 +100,21 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, invoices)
+	sumTotal, err := server.store.SumToTalFromDate(ctx, db.SumToTalFromDateParams{
+		CreatedAt:   fromDate,
+		CreatedAt_2: toDate,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	res := findInvoiceResponse{
+		SumTotal: sumTotal,
+		Invoices: invoices,
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }
 
 type getDetailInvoice struct {

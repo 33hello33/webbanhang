@@ -45,7 +45,8 @@ appRevenue = createApp({
         axios.post('invoice/find', {'from_date': String(from_date), 'to_date': String(to_date)})
         .then(response => {
           if(response.status == 200){
-            this.invoices = response.data;
+            this.invoices = response.data.invoices;
+            this.total_price_all_invoice = response.data.sum_total;
           }
         })
         .catch(error => {
@@ -77,6 +78,5 @@ appRevenue = createApp({
       this.to_date = this.formatDate();
       this.findInvoices(this.from_date, this.to_date);
     },
-    
   });
   appRevenue.mount("#root")
