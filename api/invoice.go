@@ -94,3 +94,24 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, invoices)
 }
+
+type getDetailInvoice struct {
+	ID int64 `uri:"id" binding:"required"`
+}
+
+func (server *Server) getDetailInvoice(ctx *gin.Context) {
+	var req getDetailInvoice
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	invoiceDetails, err := server.store.GetInvoiceDetail(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, invoiceDetails)
+}

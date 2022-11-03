@@ -7,6 +7,7 @@
         .input-table{
             background: transparent;
             border: none;
+            width: 100%;
         }
         .inline{
             display: inline-block; 
@@ -19,6 +20,46 @@
             left: 50%;
             width: 400px;
         }
+
+        
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
     </style>
     <div  id="root1">
     {{template "menu.html"}}
@@ -38,8 +79,9 @@
                 <a>Từ ngày</a> <input type="date" id="from_date" name="from_date" v-model="from_date" class="inline">
                 <a>Đến ngày</a> <input type="date" id="to_date" name="to_date" v-model="to_date" class="inline">
                 <button v-on:click="findInvoices()" class="inline">Tìm</button>
+                <a>Tổng giá trị: @{total_price_all_invoice}</a>
             </div>
-        
+
              <div class ="right-panel" style="width: 100%;" >
                  <div class="data-table" style="padding: 20px 0 20px 0;">
                      <table class="table table-bordered table-responsive-md table-striped text-center">
@@ -54,8 +96,8 @@
                            </tr>
                          </thead>
                          <tbody>
-                           <tr v-for="(invoice,invoiceIndex) in invoices">
-                             <td class="pt-3-half"><input class="input-table" disabled="true" v-model="invoice.id" ></td>
+                           <tr v-for="(invoice,invoiceIndex) in invoices" v-on:dblclick="showDetailInvoice(invoice)">
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.id" ></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.created_at"></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.customer_name"></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.customer_phone"></td>
@@ -72,9 +114,50 @@
                 <!-- wrap @e  -->
             </div>
             <!-- content @e  -->
+
+        <!-- The Modal -->
+        <div id="DetailInvoice" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span v-on:click="closeDetailInvoice()" class="close">&times;</span>
+            <label>Mã đơn: @{invoice.id}</label>
+            <label>Ngày tạo: @{invoice.created_at}</label>
+            <label>Khách hàng: @{invoice.customer_name}</label>
+            <label>Sdt: @{invoice.customer_phone}</label>
+            
+            <div class="data-table" style="padding: 20px 0 20px 0;">
+                <table class="table table-bordered table-responsive-md table-striped text-center">
+                    <thead>
+                      <tr>
+                        <th class="text-center">Tên SP</th>
+                        <th class="text-center">SL</th>
+                        <th class="text-center">DVT</th>
+                        <th class="text-center">Đơn Giá</th>
+                        <th class="text-center">Tổng Tiền</th>
+                        <th class="text-center">CK %</th>
+                        <th class="text-center">Thành Tiền</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(productTbl,productindexTbl) in productTbls">
+                        <td class="pt-3-half" ><input  class="input-table" v-model="productTbl.product_name" readonly="readonly"></td>
+                        <td class="pt-3-half" ><input class="input-table" v-model="productTbl.amount"  readonly="readonly"></td>
+                        <td class="pt-3-half" ><input class="input-table" v-model="productTbl.product_unit" readonly="readonly"></td>
+                        <td class="pt-3-half" ><input class="input-table" v-model="productTbl.price_at_sell"  readonly="readonly"></td>
+                        <td class="pt-3-half" ><input class="input-table" v-model="productTbl.total_price" readonly="readonly"></td>
+                        <td class="pt-3-half" ><input class="input-table" v-model="productTbl.discount"  readonly="readonly"></td>
+                        <td class="pt-3-half" ><input class="input-table" v-model="productTbl.last_price" readonly="readonly"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+
+        </div>
         </div>
         <!-- main @e  -->
-    </div>
-    <script src="/assets/js/revenue.js"></script>
+    <script src="/assets/js/revenue.js">
+    </script>
 </body>
 </html>

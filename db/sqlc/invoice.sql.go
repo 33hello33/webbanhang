@@ -163,19 +163,34 @@ func (q *Queries) GetInvoice(ctx context.Context, id int64) (Invoice, error) {
 }
 
 const getInvoiceDetail = `-- name: GetInvoiceDetail :many
-select id, invoice_id, product_id, price_at_sell, amount, total_price, discount, last_price from invoice_detail
+select invoice_detail.id, invoice_detail.invoice_id, invoice_detail.product_id, invoice_detail.price_at_sell, invoice_detail.amount, invoice_detail.total_price, invoice_detail.discount, invoice_detail.last_price, to_json(products.name) as product_name,  to_json(products.unit) as product_unit
+from invoice_detail left join products
+on invoice_detail.product_id = products.id
 where invoice_id = $1
 `
 
-func (q *Queries) GetInvoiceDetail(ctx context.Context, invoiceID int64) ([]InvoiceDetail, error) {
+type GetInvoiceDetailRow struct {
+	ID          int64           `json:"id"`
+	InvoiceID   int64           `json:"invoice_id"`
+	ProductID   int64           `json:"product_id"`
+	PriceAtSell int64           `json:"price_at_sell"`
+	Amount      float64         `json:"amount"`
+	TotalPrice  int64           `json:"total_price"`
+	Discount    float64         `json:"discount"`
+	LastPrice   int64           `json:"last_price"`
+	ProductName json.RawMessage `json:"product_name"`
+	ProductUnit json.RawMessage `json:"product_unit"`
+}
+
+func (q *Queries) GetInvoiceDetail(ctx context.Context, invoiceID int64) ([]GetInvoiceDetailRow, error) {
 	rows, err := q.db.QueryContext(ctx, getInvoiceDetail, invoiceID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []InvoiceDetail
+	var items []GetInvoiceDetailRow
 	for rows.Next() {
-		var i InvoiceDetail
+		var i GetInvoiceDetailRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.InvoiceID,
@@ -185,6 +200,8 @@ func (q *Queries) GetInvoiceDetail(ctx context.Context, invoiceID int64) ([]Invo
 			&i.TotalPrice,
 			&i.Discount,
 			&i.LastPrice,
+			&i.ProductName,
+			&i.ProductUnit,
 		); err != nil {
 			return nil, err
 		}

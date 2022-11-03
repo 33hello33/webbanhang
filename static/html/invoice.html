@@ -112,7 +112,7 @@
                     </div>
                     <div class="info-paid" style="float: right">
                         <label class="inline">Đã Trả:</label>
-                        <input class="inline" v-model="invoice.had_paid">
+                        <input class="inline" type="number" v-model="invoice.had_paid">
                     </div>
                     <div class="btn-pay">
                         <button v-on:click="paidInvoice()" type="button" id="fixedbutton" class="btn btn-lg btn-primary btn-block">Thanh toán</button>

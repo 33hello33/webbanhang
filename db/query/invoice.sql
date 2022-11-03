@@ -29,7 +29,9 @@ insert into invoice_detail(
 )returning *;
 
 -- name: GetInvoiceDetail :many
-select * from invoice_detail
+select invoice_detail.*, to_json(products.name) as product_name,  to_json(products.unit) as product_unit
+from invoice_detail left join products
+on invoice_detail.product_id = products.id
 where invoice_id = $1;
 
 -- name: FindInvoice :many

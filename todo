@@ -8,15 +8,14 @@
 
 [fix ok] filter on revenue : vẫn chưa lọc dc
 
-get detail invoice
+[fix ok] get detail invoice
+
+sum total money
 
 refresh token mượt như fb >> tips javascript
 
 search on all page
 autocomplete
-
-
-sum total money
 
 write unit test 
 
