@@ -83,6 +83,9 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		return
 	}
 
+	// add 1 day to find, because date only set by time 00:00:00
+	toDate = toDate.AddDate(0, 0, 1)
+
 	invoices, err := server.store.FindInvoice(ctx, db.FindInvoiceParams{
 		CreatedAt:   fromDate,
 		CreatedAt_2: toDate,
