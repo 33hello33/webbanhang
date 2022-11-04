@@ -140,3 +140,24 @@ func (server *Server) updateCustomer(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, nil)
 }
+
+type searchCustomerRequest struct {
+	Name string `uri:"name"`
+}
+
+func (server *Server) searchCustomer(ctx *gin.Context) {
+	var req searchCustomerRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	customers, err := server.store.SearchCustomerLikeName(ctx, "%"+req.Name+"%")
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, customers)
+}

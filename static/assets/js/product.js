@@ -6,9 +6,33 @@ appProduct = createApp({
       products: [],
       suppliers: [],
       isUpdate: false,
+      timeOut: 0,
+      searchInput: '',
     }
   },
   methods: {
+    searchProduct(){
+      if(this.searchInput == ""){
+        this.listProduct();
+        return;
+      }
+      axios.get('product/search/'+this.searchInput)
+      .then(response=>{
+        if(response.status == 200){
+          this.products = response.data;
+        }
+      })
+      .catch(error => {
+        console.log('get list product err: ' + error.data.Error);
+      });   
+    },
+    searchInputChanges(){
+      clearTimeout(this.timeOut);
+
+      this.timeOut = setTimeout(() => {
+        this.searchProduct();
+      }, 300);
+    },
     addProduct() {
       this.isUpdate = false;
       this.changeHeader();

@@ -5,9 +5,35 @@ const appCustomer = createApp({
         customer: {id: 0, name: '', phone: '', address: {String: '', Valid: false}},
         customers: [],
         isUpdate: false,
+        searchInput:'',
+        timeOut: 0,
       }
   },
   methods: {
+    searchCustomer(){
+      if(this.searchInput == ""){
+        this.listCustomer();
+        return;
+      }
+
+      axios.get('customer/search/'+this.searchInput)
+      .then(response=>{
+        if(response.status == 200){
+          this.customers =  response.data;
+        }
+      })
+      .catch(error => {
+        console.log('get list customer err: ' + error.data.Error);
+      });   
+    },
+    searchInputChanges(){
+      clearTimeout(this.timeOut);
+
+      this.timeOut = setTimeout(() => {
+        this.searchCustomer();
+      }, 300);
+    },
+
     addCustomer() {
       this.isUpdate = false;
       this.changeHeader();

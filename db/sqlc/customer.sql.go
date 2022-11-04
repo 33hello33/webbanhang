@@ -115,6 +115,39 @@ func (q *Queries) ListCustomer(ctx context.Context) ([]Customer, error) {
 	return items, nil
 }
 
+const searchCustomerLikeName = `-- name: SearchCustomerLikeName :many
+select id, phone, name, address from customers
+where name like $1
+`
+
+func (q *Queries) SearchCustomerLikeName(ctx context.Context, name string) ([]Customer, error) {
+	rows, err := q.db.QueryContext(ctx, searchCustomerLikeName, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Customer
+	for rows.Next() {
+		var i Customer
+		if err := rows.Scan(
+			&i.ID,
+			&i.Phone,
+			&i.Name,
+			&i.Address,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateCustomer = `-- name: UpdateCustomer :one
 update customers 
 set name = $2, address = $3, phone = $4

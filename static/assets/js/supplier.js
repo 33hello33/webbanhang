@@ -5,9 +5,33 @@ appSupplier = createApp({
         supplier: {id: 0, name: '', phone: '', address: '', notes: ''},
         suppliers: [],
         isUpdate: false,
+        searchInput: '',
+        timeOut: 0,
       }
   },
   methods: {
+    searchSupplier(){
+      if(this.searchInput == ""){
+        this.listProduct();
+        return;
+      }
+      axios.get('supplier/search/'+this.searchInput)
+      .then(response=>{
+        if(response.status == 200){
+          this.suppliers = response.data;
+        }
+      })
+      .catch(error => {
+        console.log('get list supplier err: ' + error.data.Error);
+      });   
+    },
+    searchInputChanges(){
+      clearTimeout(this.timeOut);
+
+      this.timeOut = setTimeout(() => {
+        this.searchSupplier();
+      }, 300);
+    },
     addSupplier() {
       this.isUpdate = false;
       this.changeHeader();

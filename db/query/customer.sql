@@ -28,3 +28,7 @@ update customers
 set name = $2, address = $3, phone = $4
 where id = $1
 returning *;
+
+-- name: SearchCustomerLikeName :many
+select * from customers
+where name like $1;

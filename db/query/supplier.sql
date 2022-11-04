@@ -25,3 +25,7 @@ returning *;
 -- name: DeleteSupplier :exec
 delete from suppliers
 where id = $1;
+
+-- name: SearchSupplierLikeName :many
+select * from suppliers
+where name like $1;

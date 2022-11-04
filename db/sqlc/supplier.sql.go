@@ -107,6 +107,40 @@ func (q *Queries) ListSupplier(ctx context.Context) ([]ListSupplierRow, error) {
 	return items, nil
 }
 
+const searchSupplierLikeName = `-- name: SearchSupplierLikeName :many
+select id, name, phone, address, notes from suppliers
+where name like $1
+`
+
+func (q *Queries) SearchSupplierLikeName(ctx context.Context, name string) ([]Supplier, error) {
+	rows, err := q.db.QueryContext(ctx, searchSupplierLikeName, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Supplier
+	for rows.Next() {
+		var i Supplier
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Phone,
+			&i.Address,
+			&i.Notes,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateSupplier = `-- name: UpdateSupplier :one
 update suppliers 
 set name = $2, address = $3, phone = $4, notes = $5

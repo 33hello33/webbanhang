@@ -24,7 +24,7 @@
                             <div class="w3-sidebar w3-collapse" id="sidenav" style="top: 44px;display: none;">
                               <div id="leftmenuinner" style="padding-top: 44px; width: 20%;">
                                 <div id="leftmenuinnerinner">
-                                  <input type="text" name="find" placeholder="Tìm kiếm" class="form-control form-control-lg"/>
+                                  <input type="text" name="find" v-on:keyup="searchInputChanges()" v-model="searchInput" placeholder="Tìm kiếm" class="form-control form-control-lg"/>
                                   <br>
                                   <h2 target="_top" v-on:click="addCustomer()" class="addButton">thêm khách hàng</h2>
                                   <br>
