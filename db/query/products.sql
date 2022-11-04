@@ -38,3 +38,8 @@ returning *;
 
 -- name: DeleteProduct :exec
 delete from products where id = $1;
+
+
+-- name: SearchProductLikeName :many
+select * from products
+where name like $1;

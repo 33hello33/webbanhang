@@ -171,3 +171,24 @@ func (server *Server) updateProduct(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, nil)
 }
+
+type searchProductRequest struct {
+	Name string `uri:"name"`
+}
+
+func (server *Server) searchProduct(ctx *gin.Context) {
+	var req searchProductRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	products, err := server.store.SearchProductLikeName(ctx, "%"+req.Name+"%")
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, products)
+}

@@ -13,7 +13,7 @@ appMenu = createApp({
     },
   },
   mounted(){
-    console.log(url);
+    var url = window.location.href;
     if(url.includes("invoice")){
       this.changeColorMenu("invoice");
     }else if(url.includes("product")){
@@ -27,4 +27,4 @@ appMenu = createApp({
     }
   },
 })
-appMenu.mount('#topnav')
+appMenu.mount('#topnav');
