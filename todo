@@ -12,10 +12,11 @@
 
 [fix ok] sum total money
 
-refresh token mượt như fb >> tips javascript
+[fix ok] sử dụng redis cache lưu sản phẩm
 
-search on all page
-autocomplete
+[fix ok] search on all page
+
+refresh token mượt như fb >> tips javascript
 
 write unit test 
 
@@ -24,8 +25,6 @@ thông báo hết hàng
 
 phân quyền user
 
-sử dụng redis cache lưu sản phẩm
-
 ngăn usr click liền tục
 
-
+thêm log

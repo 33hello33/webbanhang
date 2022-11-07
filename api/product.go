@@ -2,7 +2,11 @@ package api
 
 import (
 	"database/sql"
+	"encoding/json"
+	"log"
 	"net/http"
+	"strconv"
+	"time"
 	db "webbanhang/db/sqlc"
 
 	"github.com/gin-gonic/gin"
@@ -123,6 +127,16 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		return
 	}
 
+	pd, err := json.Marshal(product)
+	if err != nil {
+		log.Println("cant marshaling the data product")
+	}
+
+	cacheErr := server.redisClient.Set(ctx, strconv.FormatInt(req.ID, 10), pd, 10*60*time.Second).Err()
+	if cacheErr != nil {
+		log.Println(cacheErr)
+	}
+
 	res := getProductResponse{
 		ID:          product.ID,
 		Name:        product.Name,
@@ -133,6 +147,7 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		WareHouse:   product.Warehouse,
 		IdSupplier:  product.IDSupplier.Int64,
 	}
+
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -191,4 +206,27 @@ func (server *Server) searchProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, products)
+}
+
+func (server *Server) cacheProduct() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req getProductRequest
+		err := ctx.ShouldBindUri(&req)
+		if err != nil {
+			ctx.Next()
+		}
+
+		bytes, err := server.redisClient.Get(ctx, strconv.FormatInt(req.ID, 10)).Bytes()
+
+		var product db.Product
+
+		err = json.Unmarshal(bytes, &product)
+		if err != nil {
+			ctx.Next()
+		} else {
+			ctx.AbortWithStatusJSON(http.StatusOK, product)
+			return
+		}
+		ctx.Next()
+	}
 }

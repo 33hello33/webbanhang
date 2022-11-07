@@ -7,13 +7,15 @@ import (
 	"webbanhang/util"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 )
 
 type Server struct {
-	store      *db.Store
-	route      *gin.Engine
-	tokenMaker *token.PasetoMaker
-	config     util.Config
+	store       *db.Store
+	route       *gin.Engine
+	tokenMaker  *token.PasetoMaker
+	config      util.Config
+	redisClient *redis.Client
 }
 
 func NewServer(store *db.Store, config util.Config) (*Server, error) {
@@ -21,11 +23,14 @@ func NewServer(store *db.Store, config util.Config) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: config.RedisAddress,
+	})
 	server := &Server{
-		store:      store,
-		config:     config,
-		tokenMaker: tokenMaker,
+		store:       store,
+		config:      config,
+		tokenMaker:  tokenMaker,
+		redisClient: redisClient,
 	}
 
 	server.SetupRoute()
@@ -56,7 +61,7 @@ func (server *Server) SetupRoute() {
 	authRoutes := router.Group("/").Use(authMiddleware(*server.tokenMaker))
 
 	authRoutes.GET("/product", server.productHandler)
-	authRoutes.GET("/product/:id", server.getProduct)
+	authRoutes.GET("/product/:id", server.cacheProduct(), server.getProduct) // add test middleware
 	authRoutes.POST("/product/create", server.createProduct)
 	authRoutes.GET("/product/list", server.listProduct)
 	authRoutes.PUT("/product/:id", server.updateProduct)
