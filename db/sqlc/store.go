@@ -73,6 +73,11 @@ func (store *Store) InvoiceTx(ctx context.Context, arg InvoiceTxParams) (Invoice
 		}
 
 		for _, product := range arg.Products {
+			_, err := q.UpdateAmountProduct(ctx, UpdateAmountProductParams{ID: product.ID, Amount: product.Amount})
+			if err != nil {
+				return err
+			}
+
 			invoiceDetail, err := q.CreateInvoiceDetail(ctx, CreateInvoiceDetailParams{
 				InvoiceID:   result.Invoice.ID,
 				ProductID:   product.ID,

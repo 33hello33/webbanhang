@@ -127,16 +127,6 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		return
 	}
 
-	pd, err := json.Marshal(product)
-	if err != nil {
-		log.Println("cant marshaling the data product")
-	}
-
-	cacheErr := server.redisClient.Set(ctx, strconv.FormatInt(req.ID, 10), pd, 10*60*time.Second).Err()
-	if cacheErr != nil {
-		log.Println(cacheErr)
-	}
-
 	res := getProductResponse{
 		ID:          product.ID,
 		Name:        product.Name,
@@ -148,11 +138,21 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		IdSupplier:  product.IDSupplier.Int64,
 	}
 
+	pd, err := json.Marshal(product)
+	if err != nil {
+		log.Println("cant marshaling the data product")
+	}
+
+	cacheErr := server.redisClient.Set(ctx, strconv.FormatInt(req.ID, 10), pd, 10*60*time.Second).Err()
+	if cacheErr != nil {
+		log.Println(cacheErr)
+	}
+
 	ctx.JSON(http.StatusOK, res)
 }
 
 type updateProductRequest struct {
-	ID          int64  `json:"ID"`
+	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	Unit        string `json:"unit"`
 	PriceImport int64  `json:"price_import"`
@@ -173,7 +173,7 @@ func (server *Server) updateProduct(ctx *gin.Context) {
 	_, err = server.store.UpdateProduct(ctx, db.UpdateProductParams{
 		ID:          req.ID,
 		Amount:      req.Amount,
-		Price:       req.Amount,
+		Price:       req.Price,
 		PriceImport: req.PriceImport,
 		Warehouse:   req.WareHouse,
 		IDSupplier:  sql.NullInt64{Int64: req.IdSupplier, Valid: req.IdSupplier != 0},
@@ -218,7 +218,7 @@ func (server *Server) cacheProduct() gin.HandlerFunc {
 
 		bytes, err := server.redisClient.Get(ctx, strconv.FormatInt(req.ID, 10)).Bytes()
 
-		var product db.Product
+		var product getProductResponse
 
 		err = json.Unmarshal(bytes, &product)
 		if err != nil {

@@ -43,3 +43,9 @@ delete from products where id = $1;
 -- name: SearchProductLikeName :many
 select * from products
 where name like $1;
+
+-- name: UpdateAmountProduct :one
+update products
+set amount=amount-$2
+where id=$1
+returning *;

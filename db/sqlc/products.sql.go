@@ -184,6 +184,35 @@ func (q *Queries) SearchProductLikeName(ctx context.Context, name string) ([]Pro
 	return items, nil
 }
 
+const updateAmountProduct = `-- name: UpdateAmountProduct :one
+update products
+set amount=amount-$2
+where id=$1
+returning id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier
+`
+
+type UpdateAmountProductParams struct {
+	ID     int64 `json:"id"`
+	Amount int64 `json:"amount"`
+}
+
+func (q *Queries) UpdateAmountProduct(ctx context.Context, arg UpdateAmountProductParams) (Product, error) {
+	row := q.db.QueryRowContext(ctx, updateAmountProduct, arg.ID, arg.Amount)
+	var i Product
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Unit,
+		&i.PriceImport,
+		&i.Amount,
+		&i.Price,
+		&i.Warehouse,
+		&i.CreatedAt,
+		&i.IDSupplier,
+	)
+	return i, err
+}
+
 const updateProduct = `-- name: UpdateProduct :one
 update products
 set amount = $2, 
