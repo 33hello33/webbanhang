@@ -63,8 +63,8 @@ appInvoice = createApp({
         })
       },
       onchangeTable(index) {
-        this.productTbls[index].total_price = this.productTbls[index].price * this.productTbls[index].amount;
-        this.productTbls[index].last_price = this.productTbls[index].total_price * ( 1- this.productTbls[index].discount/100);
+        this.productTbls[index].total_price = Math.round(this.productTbls[index].price * this.productTbls[index].amount);
+        this.productTbls[index].last_price = Math.round(this.productTbls[index].total_price * ( 1- this.productTbls[index].discount/100));
         this.calcToTalPriceToPay();
         this.resetKey +=1;  
       },

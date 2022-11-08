@@ -88,12 +88,12 @@
                                 <tbody>
                                   <tr v-for="(productTbl,productindexTbl) in productTbls" @keyup="onchangeTable(productindexTbl)" :key="resetKey">
                                     <td class="pt-3-half" ><input  class="input-table" v-model="productTbl.name" readonly="readonly"></td>
-                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.amount"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.amount" type="number"></td>
                                     <td class="pt-3-half" ><input class="input-table" v-model="productTbl.unit" readonly="readonly"></td>
-                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.price"></td>
-                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.total_price" readonly="readonly"></td>
-                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.discount"></td>
-                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.last_price" readonly="readonly"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.price" type="number"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.total_price" type="number" readonly="readonly"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.discount" type="number"></td>
+                                    <td class="pt-3-half" ><input class="input-table" v-model="productTbl.last_price" type="number" readonly="readonly"></td>
                                     <td>
                                       <span class="table-remove">
                                         <button type="button" v-on:click="deleteRow(productindexTbl)" 

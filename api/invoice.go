@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"time"
 	db "webbanhang/db/sqlc"
@@ -105,8 +106,10 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		CreatedAt_2: toDate,
 	})
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errResponse(err))
-		return
+		//ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		//return
+		sumTotal = 0
+		log.Println("errno no row to calc sum")
 	}
 
 	res := findInvoiceResponse{

@@ -60,7 +60,6 @@ appRevenue = createApp({
         axios.get('invoice/'+invoice.id)
         .then(response => {
           if(response.status==200){
-            console.log(response.data);
             this.productTbls = response.data;
           }
         })
