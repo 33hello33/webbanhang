@@ -16,9 +16,9 @@
 
 [fix ok] search on all page
 
-[fix ok] update amount of product when selling
+update amount of product when selling => bị cache sai số lượng
 
- nhà cc bắt buộc => nếu ko nhập id nhà cung cấp thì thêm vào mua lẻ, đang bị sai check if ""
+[fix ok] nhà cc bắt buộc => nếu ko nhập id nhà cung cấp thì thêm vào mua lẻ, đang bị sai check if ""
 
 thêm hóa đơn đã hoàn thành khi trả hết tiền. chưa hoàn thành khi trả thiếu
 

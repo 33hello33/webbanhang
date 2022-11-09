@@ -61,7 +61,7 @@ func (server *Server) SetupRoute() {
 	authRoutes := router.Group("/").Use(authMiddleware(*server.tokenMaker))
 
 	authRoutes.GET("/product", server.productHandler)
-	authRoutes.GET("/product/:id", server.cacheProduct(), server.getProduct) // add test middleware
+	authRoutes.GET("/product/:id", server.getCacheProduct(), server.getProduct) // add test middleware
 	authRoutes.POST("/product/create", server.createProduct)
 	authRoutes.GET("/product/list", server.listProduct)
 	authRoutes.PUT("/product/:id", server.updateProduct)

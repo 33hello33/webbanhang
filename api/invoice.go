@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 	db "webbanhang/db/sqlc"
 
@@ -46,6 +47,15 @@ func (server *Server) createInvoice(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
+
+	//remove cache
+	for _, product := range req.Products {
+		err = server.redisClient.Del(ctx, strconv.FormatInt(product.ID, 10)).Err()
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
 	ctx.JSON(http.StatusOK, invoiceResult)
 }
 

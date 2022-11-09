@@ -137,32 +137,22 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		IdSupplier:  product.IDSupplier,
 	}
 
+	// convert product to byte and set to redis
 	pd, err := json.Marshal(product)
 	if err != nil {
 		log.Println("cant marshaling the data product")
 	}
 
-	cacheErr := server.redisClient.Set(ctx, strconv.FormatInt(req.ID, 10), pd, 10*60*time.Second).Err()
-	if cacheErr != nil {
-		log.Println(cacheErr)
+	err = server.redisClient.Set(ctx, strconv.FormatInt(product.ID, 10), pd, 10*60*time.Second).Err()
+	if err != nil {
+		log.Println(err)
 	}
 
 	ctx.JSON(http.StatusOK, res)
 }
 
-type updateProductRequest struct {
-	ID          int64  `json:"id"`
-	Name        string `json:"name"`
-	Unit        string `json:"unit"`
-	PriceImport int64  `json:"price_import"`
-	Amount      int64  `json:"amount"`
-	Price       int64  `json:"price"`
-	WareHouse   string `json:"warehouse"`
-	IdSupplier  int64  `json:"id_supplier"`
-}
-
 func (server *Server) updateProduct(ctx *gin.Context) {
-	var req updateProductRequest
+	var req getProductResponse
 	err := ctx.ShouldBind(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errResponse(err))
@@ -183,6 +173,13 @@ func (server *Server) updateProduct(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
+
+	//remove cache
+	err = server.redisClient.Del(ctx, strconv.FormatInt(req.ID, 10)).Err()
+	if err != nil {
+		log.Println(err)
+	}
+
 	ctx.JSON(http.StatusOK, nil)
 }
 
@@ -207,7 +204,7 @@ func (server *Server) searchProduct(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, products)
 }
 
-func (server *Server) cacheProduct() gin.HandlerFunc {
+func (server *Server) getCacheProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req getProductRequest
 		err := ctx.ShouldBindUri(&req)
