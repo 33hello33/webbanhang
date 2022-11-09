@@ -5,7 +5,7 @@ appRevenue = createApp({
         from_date: '',
         to_date: '',
         total_price_all_invoice: 0,
-        invoice: {id: 0, created_at: '', total_money: 0, had_paid: 0, cutomer_name: '', customer_phone:''},
+        invoice: {id: 0, created_at: '', total_money: 0, had_paid: 0, cutomer_name: '', customer_phone:'', is_done:''},
         invoices: [],
         productTbls: [],
       }
@@ -47,6 +47,15 @@ appRevenue = createApp({
           if(response.status == 200){
             this.invoices = response.data.invoices;
             this.total_price_all_invoice = response.data.sum_total;
+
+            this.invoices.forEach(invoice => {
+              console.log(invoice);
+              if(invoice.is_done == true){
+                invoice.is_done = 'Hoàn thành';
+              }else{
+                invoice.is_done = 'Nợ';
+              }
+            });
           }
         })
         .catch(error => {
