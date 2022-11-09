@@ -51,6 +51,31 @@ appProduct = createApp({
     },
     createProduct(product, productIndex){
       if(this.isUpdate == false){ // create product
+        // send info supplier, if not exist, create new supplier
+        if(product.id_supplier == ""){
+          console.log("product.id_supplier == 0");
+          axios.post('supplier/create', {"name": "Mua lẻ","phone": "0", "address":"", "notes":""})
+          .then(response =>{
+            if(response.status == 200){
+              product.id_supplier = response.data.id;
+
+              // create product
+              axios.post('product/create',product)
+              .then(response => {
+                if(response.status == 200){
+                    this.listProduct();
+                }
+              })
+              .catch(error => {
+                alert(error.data.Error);
+                });  
+            }
+          })
+          .catch(error =>{
+            alert(error.data.Error);
+          });
+        }else{
+        // create product
         axios.post('product/create',product)
         .then(response => {
           if(response.status == 200){
@@ -59,9 +84,9 @@ appProduct = createApp({
         })
         .catch(error => {
           alert(error.data.Error);
-          });   
-      }
-      else{ // update product
+          });  
+        }
+      }else{ // update product
         axios.put('product/update', product)
         .then(  response => {
           if (response.status == 200){

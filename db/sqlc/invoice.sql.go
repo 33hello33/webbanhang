@@ -15,20 +15,27 @@ const createInvoice = `-- name: CreateInvoice :one
 insert into invoices(
     customers_id,
     total_money,
-    had_paid
+    had_paid,
+    is_done
 ) values(
-    $1,$2,$3
-) returning id, created_at, customers_id, total_money, had_paid, is_deleted
+    $1,$2,$3,$4
+) returning id, created_at, customers_id, total_money, had_paid, is_done, is_deleted
 `
 
 type CreateInvoiceParams struct {
 	CustomersID int64 `json:"customers_id"`
 	TotalMoney  int64 `json:"total_money"`
 	HadPaid     int64 `json:"had_paid"`
+	IsDone      bool  `json:"is_done"`
 }
 
 func (q *Queries) CreateInvoice(ctx context.Context, arg CreateInvoiceParams) (Invoice, error) {
-	row := q.db.QueryRowContext(ctx, createInvoice, arg.CustomersID, arg.TotalMoney, arg.HadPaid)
+	row := q.db.QueryRowContext(ctx, createInvoice,
+		arg.CustomersID,
+		arg.TotalMoney,
+		arg.HadPaid,
+		arg.IsDone,
+	)
 	var i Invoice
 	err := row.Scan(
 		&i.ID,
@@ -36,6 +43,7 @@ func (q *Queries) CreateInvoice(ctx context.Context, arg CreateInvoiceParams) (I
 		&i.CustomersID,
 		&i.TotalMoney,
 		&i.HadPaid,
+		&i.IsDone,
 		&i.IsDeleted,
 	)
 	return i, err
@@ -90,7 +98,7 @@ func (q *Queries) CreateInvoiceDetail(ctx context.Context, arg CreateInvoiceDeta
 }
 
 const findInvoiceFromDate = `-- name: FindInvoiceFromDate :many
-select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
+select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_done, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
 on invoices.customers_id = customers.id 
 where created_at between $1 and $2
 `
@@ -106,6 +114,7 @@ type FindInvoiceFromDateRow struct {
 	CustomersID   int64           `json:"customers_id"`
 	TotalMoney    int64           `json:"total_money"`
 	HadPaid       int64           `json:"had_paid"`
+	IsDone        bool            `json:"is_done"`
 	IsDeleted     bool            `json:"is_deleted"`
 	CustomerName  json.RawMessage `json:"customer_name"`
 	CustomerPhone json.RawMessage `json:"customer_phone"`
@@ -126,6 +135,7 @@ func (q *Queries) FindInvoiceFromDate(ctx context.Context, arg FindInvoiceFromDa
 			&i.CustomersID,
 			&i.TotalMoney,
 			&i.HadPaid,
+			&i.IsDone,
 			&i.IsDeleted,
 			&i.CustomerName,
 			&i.CustomerPhone,
@@ -144,7 +154,7 @@ func (q *Queries) FindInvoiceFromDate(ctx context.Context, arg FindInvoiceFromDa
 }
 
 const getInvoice = `-- name: GetInvoice :one
-select id, created_at, customers_id, total_money, had_paid, is_deleted from invoices
+select id, created_at, customers_id, total_money, had_paid, is_done, is_deleted from invoices
 where id = $1 limit 1
 `
 
@@ -157,6 +167,7 @@ func (q *Queries) GetInvoice(ctx context.Context, id int64) (Invoice, error) {
 		&i.CustomersID,
 		&i.TotalMoney,
 		&i.HadPaid,
+		&i.IsDone,
 		&i.IsDeleted,
 	)
 	return i, err
@@ -217,7 +228,7 @@ func (q *Queries) GetInvoiceDetail(ctx context.Context, invoiceID int64) ([]GetI
 }
 
 const listInvoice = `-- name: ListInvoice :many
-select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
+select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_done, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
 on invoices.customers_id = customers.id
 `
 
@@ -227,6 +238,7 @@ type ListInvoiceRow struct {
 	CustomersID   int64           `json:"customers_id"`
 	TotalMoney    int64           `json:"total_money"`
 	HadPaid       int64           `json:"had_paid"`
+	IsDone        bool            `json:"is_done"`
 	IsDeleted     bool            `json:"is_deleted"`
 	CustomerName  json.RawMessage `json:"customer_name"`
 	CustomerPhone json.RawMessage `json:"customer_phone"`
@@ -247,6 +259,7 @@ func (q *Queries) ListInvoice(ctx context.Context) ([]ListInvoiceRow, error) {
 			&i.CustomersID,
 			&i.TotalMoney,
 			&i.HadPaid,
+			&i.IsDone,
 			&i.IsDeleted,
 			&i.CustomerName,
 			&i.CustomerPhone,

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -37,7 +36,7 @@ func (server *Server) createProduct(ctx *gin.Context) {
 		PriceImport: req.PriceImport,
 		Amount:      req.Amount,
 		Warehouse:   req.WareHouse,
-		IDSupplier:  sql.NullInt64{Int64: req.IdSupplier, Valid: req.IdSupplier != 0},
+		IDSupplier:  req.IdSupplier,
 	}
 
 	product, err := server.store.CreateProduct(ctx, arg)
@@ -135,7 +134,7 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		Amount:      product.Amount,
 		Price:       product.Price,
 		WareHouse:   product.Warehouse,
-		IdSupplier:  product.IDSupplier.Int64,
+		IdSupplier:  product.IDSupplier,
 	}
 
 	pd, err := json.Marshal(product)
@@ -176,7 +175,7 @@ func (server *Server) updateProduct(ctx *gin.Context) {
 		Price:       req.Price,
 		PriceImport: req.PriceImport,
 		Warehouse:   req.WareHouse,
-		IDSupplier:  sql.NullInt64{Int64: req.IdSupplier, Valid: req.IdSupplier != 0},
+		IDSupplier:  req.IdSupplier,
 		Unit:        req.Unit,
 		Name:        req.Name,
 	})

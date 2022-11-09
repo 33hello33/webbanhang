@@ -29,3 +29,7 @@ where id = $1;
 -- name: SearchSupplierLikeName :many
 select * from suppliers
 where name like $1;
+
+-- name: GetSupplierByPhone :one
+select * from suppliers
+where phone = $1;

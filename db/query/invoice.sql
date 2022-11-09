@@ -2,9 +2,10 @@
 insert into invoices(
     customers_id,
     total_money,
-    had_paid
+    had_paid,
+    is_done
 ) values(
-    $1,$2,$3
+    $1,$2,$3,$4
 ) returning *;
 
 -- name: GetInvoice :one

@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createProduct = `-- name: CreateProduct :one
@@ -25,13 +24,13 @@ insert into products(
 `
 
 type CreateProductParams struct {
-	Name        string        `json:"name"`
-	Unit        string        `json:"unit"`
-	Price       int64         `json:"price"`
-	PriceImport int64         `json:"price_import"`
-	Amount      int64         `json:"amount"`
-	Warehouse   string        `json:"warehouse"`
-	IDSupplier  sql.NullInt64 `json:"id_supplier"`
+	Name        string `json:"name"`
+	Unit        string `json:"unit"`
+	Price       int64  `json:"price"`
+	PriceImport int64  `json:"price_import"`
+	Amount      int64  `json:"amount"`
+	Warehouse   string `json:"warehouse"`
+	IDSupplier  int64  `json:"id_supplier"`
 }
 
 func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
@@ -227,14 +226,14 @@ returning id, name, unit, price_import, amount, price, warehouse, created_at, id
 `
 
 type UpdateProductParams struct {
-	ID          int64         `json:"id"`
-	Amount      int64         `json:"amount"`
-	Price       int64         `json:"price"`
-	PriceImport int64         `json:"price_import"`
-	Warehouse   string        `json:"warehouse"`
-	IDSupplier  sql.NullInt64 `json:"id_supplier"`
-	Unit        string        `json:"unit"`
-	Name        string        `json:"name"`
+	ID          int64  `json:"id"`
+	Amount      int64  `json:"amount"`
+	Price       int64  `json:"price"`
+	PriceImport int64  `json:"price_import"`
+	Warehouse   string `json:"warehouse"`
+	IDSupplier  int64  `json:"id_supplier"`
+	Unit        string `json:"unit"`
+	Name        string `json:"name"`
 }
 
 func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (Product, error) {

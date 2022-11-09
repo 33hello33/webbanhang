@@ -32,6 +32,7 @@ type Invoice struct {
 	CustomersID int64     `json:"customers_id"`
 	TotalMoney  int64     `json:"total_money"`
 	HadPaid     int64     `json:"had_paid"`
+	IsDone      bool      `json:"is_done"`
 	IsDeleted   bool      `json:"is_deleted"`
 }
 
@@ -47,15 +48,15 @@ type InvoiceDetail struct {
 }
 
 type Product struct {
-	ID          int64         `json:"id"`
-	Name        string        `json:"name"`
-	Unit        string        `json:"unit"`
-	PriceImport int64         `json:"price_import"`
-	Amount      int64         `json:"amount"`
-	Price       int64         `json:"price"`
-	Warehouse   string        `json:"warehouse"`
-	CreatedAt   time.Time     `json:"created_at"`
-	IDSupplier  sql.NullInt64 `json:"id_supplier"`
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Unit        string    `json:"unit"`
+	PriceImport int64     `json:"price_import"`
+	Amount      int64     `json:"amount"`
+	Price       int64     `json:"price"`
+	Warehouse   string    `json:"warehouse"`
+	CreatedAt   time.Time `json:"created_at"`
+	IDSupplier  int64     `json:"id_supplier"`
 }
 
 type Session struct {

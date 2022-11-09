@@ -67,6 +67,7 @@ func (store *Store) InvoiceTx(ctx context.Context, arg InvoiceTxParams) (Invoice
 			CustomersID: arg.CustomerID,
 			TotalMoney:  arg.TotalMoney,
 			HadPaid:     arg.HadPaid,
+			IsDone:      (arg.TotalMoney - arg.HadPaid) == 0,
 		})
 		if err != nil {
 			return err

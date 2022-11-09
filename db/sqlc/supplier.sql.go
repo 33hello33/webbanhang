@@ -74,6 +74,24 @@ func (q *Queries) GetSupplier(ctx context.Context, id int64) (Supplier, error) {
 	return i, err
 }
 
+const getSupplierByPhone = `-- name: GetSupplierByPhone :one
+select id, name, phone, address, notes from suppliers
+where phone = $1
+`
+
+func (q *Queries) GetSupplierByPhone(ctx context.Context, phone string) (Supplier, error) {
+	row := q.db.QueryRowContext(ctx, getSupplierByPhone, phone)
+	var i Supplier
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Phone,
+		&i.Address,
+		&i.Notes,
+	)
+	return i, err
+}
+
 const listSupplier = `-- name: ListSupplier :many
 select id, name from suppliers
 order by name

@@ -15,7 +15,7 @@ CREATE TABLE "products" (
   "price" bigint NOT NULL DEFAULT 0,
   "warehouse" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
-  "id_supplier" bigserial
+  "id_supplier" bigserial NOT NULL
 );
 
 CREATE TABLE "suppliers" (
@@ -39,6 +39,7 @@ CREATE TABLE "invoices" (
   "customers_id"  bigserial NOT NULL,
   "total_money" bigint NOT NULL,
   "had_paid" bigint NOT NULL,
+  "is_done" boolean default false NOT NULL,
   "is_deleted" boolean DEFAULT false NOT NULL
 );
 

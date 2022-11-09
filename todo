@@ -16,11 +16,34 @@
 
 [fix ok] search on all page
 
+[fix ok] update amount of product when selling
+
+ nhà cc bắt buộc => nếu ko nhập id nhà cung cấp thì thêm vào mua lẻ, đang bị sai check if ""
+
+thêm hóa đơn đã hoàn thành khi trả hết tiền. chưa hoàn thành khi trả thiếu
+
+filter hóa đơn theo khách hàng
+
+sao chép sp 
+
+filter sp hết hàng, gần hết hàng
+in hóa đơn
+
+thêm div về các hóa đơn kh đã mua trong tab khách hàng
+
+tạo thêm tab mới nếu có nhiều kh mua mà chưa thanh toán ngay
+
+
+
 refresh token mượt như fb >> tips javascript
+
+thêm sp từ exel
+xuất sp ra exel
 
 write unit test 
 
-update amount of product when selling
+thêm phiếu nhập hàng
+
 thông báo hết hàng
 
 phân quyền user
@@ -28,3 +51,7 @@ phân quyền user
 ngăn usr click liền tục
 
 thêm log
+
+thống kê sp bán theo tuần, tháng năm
+thống kê khách hàng
+thống kê doanh thu

@@ -23,23 +23,40 @@ func (server *Server) createSupplier(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.CreateSupplierParams{
-		Name:  req.Name,
-		Phone: req.Phone,
-		Address: sql.NullString{
-			String: req.Address,
-			Valid:  len(req.Address) != 0},
-		Notes: sql.NullString{
-			String: req.Notes,
-			Valid:  len(req.Notes) != 0},
+	if req.Phone == "" {
+		req.Phone = "0"
 	}
-	_, err = server.store.CreateSupplier(ctx, arg)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errResponse(err))
-		return
+	if req.Name == "" {
+		req.Name = "Nhập lẻ"
 	}
 
-	ctx.JSON(http.StatusOK, nil)
+	supplier, err := server.store.GetSupplierByPhone(ctx, req.Phone)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			arg := db.CreateSupplierParams{
+				Name:  req.Name,
+				Phone: req.Phone,
+				Address: sql.NullString{
+					String: req.Address,
+					Valid:  len(req.Address) != 0},
+				Notes: sql.NullString{
+					String: req.Notes,
+					Valid:  len(req.Notes) != 0},
+			}
+
+			supplier, err = server.store.CreateSupplier(ctx, arg)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, errResponse(err))
+				return
+			}
+
+		} else {
+			ctx.JSON(http.StatusInternalServerError, errResponse(err))
+			return
+		}
+	}
+
+	ctx.JSON(http.StatusOK, supplier)
 }
 
 type getSupplierRequest struct {
