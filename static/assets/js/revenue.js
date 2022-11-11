@@ -4,6 +4,8 @@ appRevenue = createApp({
       return {
         from_date: '',
         to_date: '',
+        filter_by: '',
+        filter_input: '',
         total_price_all_invoice: 0,
         invoice: {id: 0, created_at: '', total_money: 0, had_paid: 0, cutomer_name: '', customer_phone:'', is_done:''},
         invoices: [],
@@ -41,15 +43,20 @@ appRevenue = createApp({
     
         return [year, month, day].join('-');
       },
-      findInvoices(from_date, to_date){
-        axios.post('invoice/find', {'from_date': String(from_date), 'to_date': String(to_date)})
+      findInvoices(from_date, to_date, filter_by, filter_input){
+        cono
+        axios.post('invoice/find', {
+          'from_date': String(from_date),
+           'to_date': String(to_date),
+           'filter_by': filter_by,
+           'filter_input': filter_input,
+          })
         .then(response => {
           if(response.status == 200){
             this.invoices = response.data.invoices;
             this.total_price_all_invoice = response.data.sum_total;
 
             this.invoices.forEach(invoice => {
-              console.log(invoice);
               if(invoice.is_done == true){
                 invoice.is_done = 'Hoàn thành';
               }else{
@@ -84,7 +91,7 @@ appRevenue = createApp({
     beforeMount(){
       this.from_date = this.formatDate();
       this.to_date = this.formatDate();
-      this.findInvoices(this.from_date, this.to_date);
+      this.findInvoices(this.from_date, this.to_date, "", "");
     },
   });
   appRevenue.mount("#root")

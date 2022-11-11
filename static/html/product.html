@@ -29,9 +29,10 @@
                         <br>
                         <h2 target="_top">ds sản phẩm</h2>
                         <div class="list-leftmenu" v-for="(product, productIndex) in products">
-                        <a v-on:click="getDetailProduct(product, productIndex)" target="_top"  >@{ product.name }</a>
+                        <a v-on:click="getDetailProduct(product)" target="_top"  >@{ product.name }</a>
                         <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="deleteProduct(product, productIndex)" >x</button>
-                        </div>
+                        <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="copyProduct(product)" >copy</button> 
+                    </div>
                         
                         <br><br>
                     </div>
@@ -78,7 +79,7 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="button" ref="buttonProduct" id="buttonProduct" v-on:click="createProduct(product, productIndex)" class="btn btn-lg btn-primary btn-block">Thêm Sản Phẩm</button>
+                        <button type="button" ref="buttonProduct" id="buttonProduct" v-on:click="createProduct(product)" class="btn btn-lg btn-primary btn-block">Thêm Sản Phẩm</button>
                     </div>
                 </form>
                 </div>

@@ -16,6 +16,7 @@ type StringNull struct {
 	String string `json:"String"`
 	Valid  bool   `json:"Valid"`
 }
+
 type createCustomerRequest struct {
 	Name    string     `json:"name"`
 	Phone   string     `json:"phone"`

@@ -11,6 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func (server *Server) productHandler(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "product.html", gin.H{"title": "product"})
+}
+
 type createProductRequest struct {
 	Name        string `json:"name"`
 	Unit        string `json:"unit"`
@@ -51,10 +55,6 @@ func (server *Server) createProduct(ctx *gin.Context) {
 type listProductRequest struct {
 	Limit  int `json:"limit"`
 	Offset int `json:"offset"`
-}
-
-func (server *Server) productHandler(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "product.html", gin.H{"title": "product"})
 }
 
 func (server *Server) listProduct(ctx *gin.Context) {
@@ -225,4 +225,25 @@ func (server *Server) getCacheProduct() gin.HandlerFunc {
 		}
 		ctx.Next()
 	}
+}
+
+type copyProductRequest struct {
+	ID int64 `uri:"id"`
+}
+
+func (server *Server) copyProduct(ctx *gin.Context) {
+	var req copyProductRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	product, err := server.store.CopyProduct(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, product)
 }

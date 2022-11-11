@@ -8,7 +8,7 @@ const appLogin = createApp({
   methods: {
     loginUser(){
       if (this.user.username == ''){
-        alert('Chưa nhập tên đăng nhập');
+        console.log('Chưa nhập tên đăng nhập');
       }else{
         axios.post('login', {username: this.user.username, password: this.user.password})
         .then(response => {
@@ -19,7 +19,7 @@ const appLogin = createApp({
               window.location.href = '/';          
             })
         .catch(error => {
-          alert(error.data.Error);
+          console.log(error.data.Error);
           });      
       }
     },

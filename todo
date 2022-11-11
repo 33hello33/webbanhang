@@ -16,15 +16,19 @@
 
 [fix ok] search on all page
 
-update amount of product when selling => bị cache sai số lượng
+[fix ok] update amount of product when selling => bị cache sai số lượng
 
 [fix ok] nhà cc bắt buộc => nếu ko nhập id nhà cung cấp thì thêm vào mua lẻ, đang bị sai check if ""
 
-thêm hóa đơn đã hoàn thành khi trả hết tiền. chưa hoàn thành khi trả thiếu
+[fix ok] thêm hóa đơn đã hoàn thành khi trả hết tiền. chưa hoàn thành khi trả thiếu
 
-filter hóa đơn theo khách hàng
+[fix ok] sao chép sp 
 
-sao chép sp 
+set cookie từ server và httponly 
+
+nếu hd đang nợ thì cần trả tiếp hoặc trả hết
+
+filter hóa đơn theo khách hàng, trạng thái
 
 filter sp hết hàng, gần hết hàng
 in hóa đơn

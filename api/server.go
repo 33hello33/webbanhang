@@ -1,7 +1,6 @@
 package api
 
 import (
-	"net/http"
 	db "webbanhang/db/sqlc"
 	"webbanhang/token"
 	"webbanhang/util"
@@ -46,10 +45,7 @@ func (server *Server) SetupRoute() {
 	router.LoadHTMLGlob("./static/html/*")
 	router.Static("/assets/", "./static/assets")
 
-	router.GET("/test", server.test)
-
 	router.GET("/", server.invoiceHandler)
-
 	router.GET("/login", server.loginHandler)
 	router.GET("/register", server.registerHandler)
 	router.POST("/login", server.loginUser)
@@ -67,6 +63,7 @@ func (server *Server) SetupRoute() {
 	authRoutes.PUT("/product/:id", server.updateProduct)
 	authRoutes.DELETE("/product/:id", server.deleteProduct)
 	authRoutes.GET("/product/search/:name", server.searchProduct)
+	authRoutes.POST("/product/copy/:id", server.copyProduct)
 
 	authRoutes.GET("/supplier", server.supplierHandler)
 	authRoutes.POST("/supplier/create", server.createSupplier)
@@ -97,8 +94,4 @@ func (server *Server) SetupRoute() {
 
 func errResponse(err error) gin.H {
 	return gin.H{"Error": err.Error()}
-}
-
-func (server *Server) test(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "test.html", nil)
 }

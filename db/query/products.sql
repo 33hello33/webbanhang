@@ -49,3 +49,23 @@ update products
 set amount=amount-$2
 where id=$1
 returning *;
+
+-- name: CopyProduct :one
+insert into products(
+    name,
+    unit,
+    price,
+    price_import,
+    amount,
+    warehouse,
+    id_supplier)
+select concat(name, '(copy)'), 
+    unit,
+    price,
+    price_import,
+    amount,
+    warehouse,
+    id_supplier
+from products as pd
+where pd.id = $1
+returning *;

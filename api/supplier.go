@@ -8,6 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func (server *Server) supplierHandler(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "supplier.html", gin.H{"supplier": "test"})
+}
+
 type createSupplierRequest struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
@@ -99,10 +103,6 @@ func (server *Server) getSupplier(ctx *gin.Context) {
 type listSupplierRequest struct {
 	Limit  int64 `json:"limit"`
 	Offset int64 `json:"offset"`
-}
-
-func (server *Server) supplierHandler(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "supplier.html", gin.H{"supplier": "test"})
 }
 
 func (server *Server) listSupplier(ctx *gin.Context) {

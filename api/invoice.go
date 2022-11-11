@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -70,8 +71,10 @@ func (server *Server) listInvoice(ctx *gin.Context) {
 }
 
 type findInvoiceRequest struct {
-	FromDate string `json:"from_date"`
-	ToDate   string `json:"to_date"`
+	FromDate     string `json:"from_date"`
+	ToDate       string `json:"to_date"`
+	FilterBy     string `json:"filter_by"`
+	Filter_Input string `json:"filter_input"`
 }
 
 type findInvoiceResponse struct {
@@ -86,7 +89,7 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errResponse(err))
 		return
 	}
-
+	fmt.Println(req)
 	fromDate, err := time.Parse("2006-01-02", req.FromDate)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))

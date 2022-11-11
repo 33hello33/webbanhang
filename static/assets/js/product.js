@@ -46,14 +46,13 @@ appProduct = createApp({
         }
       })
       .catch(error => {
-        alert(error.data.Error);
+        console.log(error.data.Error);
         });   
     },
-    createProduct(product, productIndex){
+    createProduct(product){
       if(this.isUpdate == false){ // create product
         // send info supplier, if not exist, create new supplier
         if(product.id_supplier == ""){
-          console.log("product.id_supplier == 0");
           axios.post('supplier/create', {"name": "Mua lẻ","phone": "0", "address":"", "notes":""})
           .then(response =>{
             if(response.status == 200){
@@ -67,12 +66,12 @@ appProduct = createApp({
                 }
               })
               .catch(error => {
-                alert(error.data.Error);
+                console.log(error.data.Error);
                 });  
             }
           })
           .catch(error =>{
-            alert(error.data.Error);
+            console.log(error.data.Error);
           });
         }else{
         // create product
@@ -83,7 +82,7 @@ appProduct = createApp({
           }
         })
         .catch(error => {
-          alert(error.data.Error);
+          console.log(error.data.Error);
           });  
         }
       }else{ // update product
@@ -100,7 +99,7 @@ appProduct = createApp({
         this.addProduct();
       }
     },
-    getDetailProduct(product, productIndex){
+    getDetailProduct(product){
       this.isUpdate = true;
       this.changeHeader();
       axios.get('product/' + product.id).then(response =>{
@@ -135,6 +134,18 @@ appProduct = createApp({
         }
       });
     },
+    copyProduct(product){
+       // create product
+       axios.post('product/copy/' +product.id , product)
+       .then(response => {
+         if(response.status == 200){
+             this.listProduct();
+         }
+       })
+       .catch(error => {
+         console.log(error.data.Error);
+         });  
+    }
   },
   beforeMount(){
     this.listProduct();

@@ -78,7 +78,13 @@
             <div class="date">
                 <a>Từ ngày</a> <input type="date" id="from_date" name="from_date" v-model="from_date" class="inline">
                 <a>Đến ngày</a> <input type="date" id="to_date" name="to_date" v-model="to_date" class="inline">
-                <button v-on:click="findInvoices(from_date, to_date)" class="inline">Tìm</button>
+                <select class="form-control inline" v-model="filter_by" style="width: 200px;">
+                             <option selected="selected">Tất cả</option> 
+                             <option>Tên Khách hàng</option> 
+                             <option>Trạng thái</option> 
+                 </select>
+                 <input type="text" name="filter_input" v-model="filter_input" class="inline">
+                <button v-on:click="findInvoices(from_date, to_date, filter_by, filter_input)" class="inline">Tìm</button>
                 <a>Tổng giá trị: @{total_price_all_invoice}</a>
             </div>
 

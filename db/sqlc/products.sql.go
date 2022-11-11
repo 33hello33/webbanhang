@@ -9,6 +9,44 @@ import (
 	"context"
 )
 
+const copyProduct = `-- name: CopyProduct :one
+insert into products(
+    name,
+    unit,
+    price,
+    price_import,
+    amount,
+    warehouse,
+    id_supplier)
+select concat(name, '(copy)'), 
+    unit,
+    price,
+    price_import,
+    amount,
+    warehouse,
+    id_supplier
+from products as pd
+where pd.id = $1
+returning id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier
+`
+
+func (q *Queries) CopyProduct(ctx context.Context, id int64) (Product, error) {
+	row := q.db.QueryRowContext(ctx, copyProduct, id)
+	var i Product
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Unit,
+		&i.PriceImport,
+		&i.Amount,
+		&i.Price,
+		&i.Warehouse,
+		&i.CreatedAt,
+		&i.IDSupplier,
+	)
+	return i, err
+}
+
 const createProduct = `-- name: CreateProduct :one
 insert into products(
     name,
