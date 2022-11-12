@@ -12,9 +12,7 @@ const appLogin = createApp({
       }else{
         axios.post('login', {username: this.user.username, password: this.user.password})
         .then(response => {
-
               var data = response.data;
-              $cookies.set('token', data.token);
               localStorage.setItem('refresh_token', data.refresh_token)
               window.location.href = '/';          
             })

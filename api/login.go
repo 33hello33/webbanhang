@@ -59,6 +59,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
+	ctx.SetCookie("token", token, int(server.config.AccessTokenDuration), "/", server.config.ServerAddress, true, true)
 
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(req.Username, server.config.RefreshTokenDuration)
 

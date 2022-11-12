@@ -78,15 +78,16 @@
             <div class="date">
                 <a>Từ ngày</a> <input type="date" id="from_date" name="from_date" v-model="from_date" class="inline">
                 <a>Đến ngày</a> <input type="date" id="to_date" name="to_date" v-model="to_date" class="inline">
-                <select class="form-control inline" v-model="filter_by" style="width: 200px;">
-                             <option selected="selected">Tất cả</option> 
-                             <option>Tên Khách hàng</option> 
-                             <option>Trạng thái</option> 
+                <select class="form-control inline" v-model="filter_by_id" @change="onChangeFilterID()" style="width: 150px;">
+                             <option v-for="id in filter_ids" :value="id"> @{id}</option>
                  </select>
-                 <input type="text" name="filter_input" v-model="filter_input" class="inline">
-                <button v-on:click="findInvoices(from_date, to_date, filter_by, filter_input)" class="inline">Tìm</button>
-                <a>Tổng giá trị: @{total_price_all_invoice}</a>
+                 <input type="text" ref="filter_input" v-model="filter_input" class="form-control inline" style="width: 150px;"> 
+                 <select class="form-control inline" v-model="filter_by_status" @change="onChangeFilterStatus()" style="width: 150px;">
+                    <option v-for="status in filter_status">@{status}</option> 
+                </select>
+                <button v-on:click="findInvoices(from_date, to_date, filter_by, filter_input)" class="inline">Tìm</button> 
             </div>
+            <a>Tổng giá trị: @{total_price_all_invoice}</a>
 
              <div class ="right-panel" style="width: 100%;" >
                  <div class="data-table" style="padding: 20px 0 20px 0;">
