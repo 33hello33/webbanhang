@@ -142,9 +142,12 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		return
 	}
 
-	sumTotal, err := server.store.SumToTalFromDate(ctx, db.SumToTalFromDateParams{
-		CreatedAt:   fromDate,
-		CreatedAt_2: toDate,
+	sumTotal, err := server.store.SumToTalMoney(ctx, db.SumToTalMoneyParams{
+		CreatedFrom: fromDate,
+		CreatedTo:   toDate,
+		Name:        sql.NullString{String: nameCustomer, Valid: nameCustomer != ""},
+		IsDone:      sql.NullBool{Bool: IsDone, Valid: req.FilterByStatus != "Tất cả"},
+		IDInvoice:   sql.NullInt64{Int64: IdInvoice, Valid: IdInvoice != 0},
 	})
 	if err != nil {
 		//ctx.JSON(http.StatusInternalServerError, errResponse(err))

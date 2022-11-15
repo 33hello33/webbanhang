@@ -25,9 +25,6 @@ appRevenue = createApp({
           this.$refs.filter_input.placeholder = 'Nhập tên khách hàng';
         }
       },
-      onChangeFilterStatus(){
-        console.log(this.filter_by_status);
-      },
       listInvoices(){
         axios.get('invoice/list').then(response =>{
           if(response.status == 200){

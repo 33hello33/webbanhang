@@ -103,7 +103,9 @@ select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_m
 from invoices left join customers
     on invoices.customers_id = customers.id 
 where (created_at between $1 and $2)
-and (name like coalesce($3,name)) and (invoices.id = coalesce($4, invoices.id))and (invoices.is_done = coalesce($5,is_done))
+    and (name like coalesce($3, name)) 
+    and (invoices.id = coalesce($4, invoices.id))
+    and (invoices.is_done = coalesce($5,is_done))
 `
 
 type FindInvoiceParams struct {
@@ -188,7 +190,7 @@ func (q *Queries) GetInvoice(ctx context.Context, id int64) (Invoice, error) {
 const getInvoiceDetail = `-- name: GetInvoiceDetail :many
 select invoice_detail.id, invoice_detail.invoice_id, invoice_detail.product_id, invoice_detail.price_at_sell, invoice_detail.amount, invoice_detail.total_price, invoice_detail.discount, invoice_detail.last_price, to_json(products.name) as product_name,  to_json(products.unit) as product_unit
 from invoice_detail left join products
-on invoice_detail.product_id = products.id
+    on invoice_detail.product_id = products.id
 where invoice_id = $1
 `
 
@@ -289,19 +291,32 @@ func (q *Queries) ListInvoice(ctx context.Context) ([]ListInvoiceRow, error) {
 	return items, nil
 }
 
-const sumToTalFromDate = `-- name: SumToTalFromDate :one
+const sumToTalMoney = `-- name: SumToTalMoney :one
 select sum(total_money)
-from invoices
-where created_at between $1 and $2
+from invoices left join customers
+    on invoices.customers_id = customers.id 
+where (created_at between $1 and $2)
+    and (name like coalesce($3, name)) 
+    and (invoices.id = coalesce($4, invoices.id))
+    and (invoices.is_done = coalesce($5,is_done))
 `
 
-type SumToTalFromDateParams struct {
-	CreatedAt   time.Time `json:"created_at"`
-	CreatedAt_2 time.Time `json:"created_at_2"`
+type SumToTalMoneyParams struct {
+	CreatedFrom time.Time      `json:"created_from"`
+	CreatedTo   time.Time      `json:"created_to"`
+	Name        sql.NullString `json:"name"`
+	IDInvoice   sql.NullInt64  `json:"id_invoice"`
+	IsDone      sql.NullBool   `json:"is_done"`
 }
 
-func (q *Queries) SumToTalFromDate(ctx context.Context, arg SumToTalFromDateParams) (int64, error) {
-	row := q.db.QueryRowContext(ctx, sumToTalFromDate, arg.CreatedAt, arg.CreatedAt_2)
+func (q *Queries) SumToTalMoney(ctx context.Context, arg SumToTalMoneyParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, sumToTalMoney,
+		arg.CreatedFrom,
+		arg.CreatedTo,
+		arg.Name,
+		arg.IDInvoice,
+		arg.IsDone,
+	)
 	var sum int64
 	err := row.Scan(&sum)
 	return sum, err

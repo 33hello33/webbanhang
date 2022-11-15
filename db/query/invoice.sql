@@ -32,7 +32,7 @@ insert into invoice_detail(
 -- name: GetInvoiceDetail :many
 select invoice_detail.*, to_json(products.name) as product_name,  to_json(products.unit) as product_unit
 from invoice_detail left join products
-on invoice_detail.product_id = products.id
+    on invoice_detail.product_id = products.id
 where invoice_id = $1;
 
 -- name: FindInvoice :many
@@ -40,9 +40,15 @@ select invoices.*, to_json(name) as name, to_json(phone) as phone
 from invoices left join customers
     on invoices.customers_id = customers.id 
 where (created_at between sqlc.arg(created_from) and sqlc.arg(created_to))
-and (name like coalesce(sqlc.narg(name),name)) and (invoices.id = coalesce(sqlc.narg(id_invoice), invoices.id))and (invoices.is_done = coalesce(sqlc.narg(is_done),is_done)); 
+    and (name like coalesce(sqlc.narg(name), name)) 
+    and (invoices.id = coalesce(sqlc.narg(id_invoice), invoices.id))
+    and (invoices.is_done = coalesce(sqlc.narg(is_done),is_done)); 
 
--- name: SumToTalFromDate :one
+-- name: SumToTalMoney :one
 select sum(total_money)
-from invoices
-where created_at between $1 and $2;
+from invoices left join customers
+    on invoices.customers_id = customers.id 
+where (created_at between sqlc.arg(created_from) and sqlc.arg(created_to))
+    and (name like coalesce(sqlc.narg(name), name)) 
+    and (invoices.id = coalesce(sqlc.narg(id_invoice), invoices.id))
+    and (invoices.is_done = coalesce(sqlc.narg(is_done),is_done)); 

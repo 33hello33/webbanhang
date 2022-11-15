@@ -82,7 +82,7 @@
                              <option v-for="id in filter_ids" :value="id"> @{id}</option>
                  </select>
                  <input type="text" ref="filter_input" v-model="filter_input" class="form-control inline" style="width: 150px;"> 
-                 <select class="form-control inline" v-model="filter_by_status" @change="onChangeFilterStatus()" style="width: 150px;">
+                 <select class="form-control inline" v-model="filter_by_status" style="width: 150px;">
                     <option v-for="status in filter_status">@{status}</option> 
                 </select>
                 <button v-on:click="findInvoices(from_date, to_date, filter_by_id, filter_input, filter_by_status)" class="inline">Tìm</button> 
