@@ -65,7 +65,7 @@ func (server *Server) renewToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
-	ctx.SetCookie("cookie", token, int(server.config.AccessTokenDuration), "/", server.config.ServerAddress, true, true)
+	ctx.SetCookie("token", token, int(server.config.AccessTokenDuration), "/", server.config.ServerAddress, true, true)
 
 	res := renewTokenResponse{
 		Token:          token,

@@ -5,12 +5,12 @@ appRevenue = createApp({
         from_date: '',
         to_date: '',
         filter_by_id: '',
-        filter_ids: ['Tất cả','Mã đơn hàng','Tên Khách hàng'],
+        filter_ids: ['Tất cả','Mã đơn hàng','Tên khách hàng'],
         filter_input: '',
         filter_by_status: '',
         filter_status: ['Tất cả', 'Hoàn thành', 'Nợ'],
         total_price_all_invoice: 0,
-        invoice: {id: 0, created_at: '', total_money: 0, had_paid: 0, cutomer_name: '', customer_phone:'', is_done:''},
+        invoice: {id: 0, created_at: '', total_money: 0, had_paid: 0, name: '', phone:'', is_done:''},
         invoices: [],
         productTbls: [],
       }
@@ -99,7 +99,7 @@ appRevenue = createApp({
     beforeMount(){
       this.from_date = this.formatDate();
       this.to_date = this.formatDate();
-      this.findInvoices(this.from_date, this.to_date, "", "");
+      this.findInvoices(this.from_date, this.to_date, "", "", "");
       this.filter_by_id = this.filter_ids[0];
       this.filter_by_status = this.filter_status[0];
     },

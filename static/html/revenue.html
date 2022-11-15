@@ -85,7 +85,7 @@
                  <select class="form-control inline" v-model="filter_by_status" @change="onChangeFilterStatus()" style="width: 150px;">
                     <option v-for="status in filter_status">@{status}</option> 
                 </select>
-                <button v-on:click="findInvoices(from_date, to_date, filter_by, filter_input)" class="inline">Tìm</button> 
+                <button v-on:click="findInvoices(from_date, to_date, filter_by_id, filter_input, filter_by_status)" class="inline">Tìm</button> 
             </div>
             <a>Tổng giá trị: @{total_price_all_invoice}</a>
 
@@ -107,8 +107,8 @@
                            <tr v-for="(invoice,invoiceIndex) in invoices" v-on:dblclick="showDetailInvoice(invoice)">
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.id" ></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.created_at"></td>
-                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.customer_name"></td>
-                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.customer_phone"></td>
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.name"></td>
+                             <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.phone"></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.total_money"></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.had_paid"></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.is_done"></td>
@@ -132,8 +132,8 @@
             <span v-on:click="closeDetailInvoice()" class="close">&times;</span>
             <label>Mã đơn: @{invoice.id}</label>
             <label>Ngày tạo: @{invoice.created_at}</label>
-            <label>Khách hàng: @{invoice.customer_name}</label>
-            <label>Sdt: @{invoice.customer_phone}</label>
+            <label>Khách hàng: @{invoice.name}</label>
+            <label>Sdt: @{invoice.phone}</label>
             
             <div class="data-table" style="padding: 20px 0 20px 0;">
                 <table class="table table-bordered table-responsive-md table-striped text-center">

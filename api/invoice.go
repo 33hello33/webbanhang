@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -71,15 +72,16 @@ func (server *Server) listInvoice(ctx *gin.Context) {
 }
 
 type findInvoiceRequest struct {
-	FromDate     string `json:"from_date"`
-	ToDate       string `json:"to_date"`
-	FilterBy     string `json:"filter_by"`
-	Filter_Input string `json:"filter_input"`
+	FromDate       string `json:"from_date"`
+	ToDate         string `json:"to_date"`
+	FilterByID     string `json:"filter_by_id"`
+	Filter_Input   string `json:"filter_input"`
+	FilterByStatus string `json:"filter_by_status"`
 }
 
 type findInvoiceResponse struct {
-	SumTotal int64                       `json:"sum_total"`
-	Invoices []db.FindInvoiceFromDateRow `json:"invoices"`
+	SumTotal int64               `json:"sum_total"`
+	Invoices []db.FindInvoiceRow `json:"invoices"`
 }
 
 func (server *Server) findInvoice(ctx *gin.Context) {
@@ -92,12 +94,14 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 	fmt.Println(req)
 	fromDate, err := time.Parse("2006-01-02", req.FromDate)
 	if err != nil {
+		err = fmt.Errorf("%w, cannot parse date time: fromdate", err)
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
 
 	toDate, err := time.Parse("2006-01-02", req.ToDate)
 	if err != nil {
+		err = fmt.Errorf("%w, cannot parse date time: ToDate", err)
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
@@ -105,11 +109,35 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 	// add 1 day to find, because date only set by time 00:00:00
 	toDate = toDate.AddDate(0, 0, 1)
 
-	invoices, err := server.store.FindInvoiceFromDate(ctx, db.FindInvoiceFromDateParams{
-		CreatedAt:   fromDate,
-		CreatedAt_2: toDate,
+	var nameCustomer string
+	var IdInvoice int64 = 0
+	switch req.FilterByID {
+	case "Tên khách hàng":
+		nameCustomer = "%" + req.Filter_Input + "%" // find all customer name like %name%
+		break
+	case "Mã đơn hàng":
+		IdInvoice, err = strconv.ParseInt(req.Filter_Input, 10, 64)
+		if err != nil {
+			err = fmt.Errorf("%w, cannot parse id invoice", err)
+			ctx.JSON(http.StatusInternalServerError, errResponse(err))
+			return
+		}
+		break
+	}
+
+	var IsDone = false
+	if req.FilterByStatus == "Hoàn thành" {
+		IsDone = true
+	}
+	invoices, err := server.store.FindInvoice(ctx, db.FindInvoiceParams{
+		CreatedFrom: fromDate,
+		CreatedTo:   toDate,
+		Name:        sql.NullString{String: nameCustomer, Valid: nameCustomer != ""},
+		IsDone:      sql.NullBool{Bool: IsDone, Valid: req.FilterByStatus != "Tất cả"},
+		IDInvoice:   sql.NullInt64{Int64: IdInvoice, Valid: IdInvoice != 0},
 	})
 	if err != nil {
+		err = fmt.Errorf("%w, cannot FindInvoice", err)
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
