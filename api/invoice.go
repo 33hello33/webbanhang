@@ -168,6 +168,22 @@ type getDetailInvoice struct {
 	ID int64 `uri:"id" binding:"required"`
 }
 
+func (server *Server) getInvoice(ctx *gin.Context) {
+	var req getDetailInvoice
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	invoice, err := server.store.GetInvoice(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, invoice)
+}
 func (server *Server) getDetailInvoice(ctx *gin.Context) {
 	var req getDetailInvoice
 	err := ctx.ShouldBindUri(&req)
@@ -204,4 +220,8 @@ func (server *Server) updateInvoice(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, nil)
+}
+
+func (server *Server) printInvoiceHandler(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "print_invoice.html", nil)
 }

@@ -168,13 +168,26 @@ func (q *Queries) FindInvoice(ctx context.Context, arg FindInvoiceParams) ([]Fin
 }
 
 const getInvoice = `-- name: GetInvoice :one
-select id, created_at, customers_id, total_money, had_paid, is_done, is_deleted from invoices
-where id = $1 limit 1
+select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_done, invoices.is_deleted, to_json(customers.name) as name, to_json(customers.phone) as phone from invoices left join customers
+on invoices.customers_id = customers.id
+where invoices.id = $1 limit 1
 `
 
-func (q *Queries) GetInvoice(ctx context.Context, id int64) (Invoice, error) {
+type GetInvoiceRow struct {
+	ID          int64           `json:"id"`
+	CreatedAt   time.Time       `json:"created_at"`
+	CustomersID int64           `json:"customers_id"`
+	TotalMoney  int64           `json:"total_money"`
+	HadPaid     int64           `json:"had_paid"`
+	IsDone      bool            `json:"is_done"`
+	IsDeleted   bool            `json:"is_deleted"`
+	Name        json.RawMessage `json:"name"`
+	Phone       json.RawMessage `json:"phone"`
+}
+
+func (q *Queries) GetInvoice(ctx context.Context, id int64) (GetInvoiceRow, error) {
 	row := q.db.QueryRowContext(ctx, getInvoice, id)
-	var i Invoice
+	var i GetInvoiceRow
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
@@ -183,6 +196,8 @@ func (q *Queries) GetInvoice(ctx context.Context, id int64) (Invoice, error) {
 		&i.HadPaid,
 		&i.IsDone,
 		&i.IsDeleted,
+		&i.Name,
+		&i.Phone,
 	)
 	return i, err
 }
@@ -242,20 +257,20 @@ func (q *Queries) GetInvoiceDetail(ctx context.Context, invoiceID int64) ([]GetI
 }
 
 const listInvoice = `-- name: ListInvoice :many
-select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_done, invoices.is_deleted, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
+select invoices.id, invoices.created_at, invoices.customers_id, invoices.total_money, invoices.had_paid, invoices.is_done, invoices.is_deleted, to_json(customers.name) as name, to_json(customers.phone) as phone from invoices left join customers
 on invoices.customers_id = customers.id
 `
 
 type ListInvoiceRow struct {
-	ID            int64           `json:"id"`
-	CreatedAt     time.Time       `json:"created_at"`
-	CustomersID   int64           `json:"customers_id"`
-	TotalMoney    int64           `json:"total_money"`
-	HadPaid       int64           `json:"had_paid"`
-	IsDone        bool            `json:"is_done"`
-	IsDeleted     bool            `json:"is_deleted"`
-	CustomerName  json.RawMessage `json:"customer_name"`
-	CustomerPhone json.RawMessage `json:"customer_phone"`
+	ID          int64           `json:"id"`
+	CreatedAt   time.Time       `json:"created_at"`
+	CustomersID int64           `json:"customers_id"`
+	TotalMoney  int64           `json:"total_money"`
+	HadPaid     int64           `json:"had_paid"`
+	IsDone      bool            `json:"is_done"`
+	IsDeleted   bool            `json:"is_deleted"`
+	Name        json.RawMessage `json:"name"`
+	Phone       json.RawMessage `json:"phone"`
 }
 
 func (q *Queries) ListInvoice(ctx context.Context) ([]ListInvoiceRow, error) {
@@ -275,8 +290,8 @@ func (q *Queries) ListInvoice(ctx context.Context) ([]ListInvoiceRow, error) {
 			&i.HadPaid,
 			&i.IsDone,
 			&i.IsDeleted,
-			&i.CustomerName,
-			&i.CustomerPhone,
+			&i.Name,
+			&i.Phone,
 		); err != nil {
 			return nil, err
 		}

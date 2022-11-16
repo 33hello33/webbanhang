@@ -9,11 +9,12 @@ insert into invoices(
 ) returning *;
 
 -- name: GetInvoice :one
-select * from invoices
-where id = $1 limit 1;
+select invoices.*, to_json(customers.name) as name, to_json(customers.phone) as phone from invoices left join customers
+on invoices.customers_id = customers.id
+where invoices.id = $1 limit 1;
 
 -- name: ListInvoice :many
-select invoices.*, to_json(customers.name) as customer_name, to_json(customers.phone) as customer_phone from invoices left join customers
+select invoices.*, to_json(customers.name) as name, to_json(customers.phone) as phone from invoices left join customers
 on invoices.customers_id = customers.id ;
 
 -- name: CreateInvoiceDetail :one

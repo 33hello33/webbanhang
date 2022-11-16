@@ -78,7 +78,7 @@ appRevenue = createApp({
         this.invoice = invoice;
         var modal = document.getElementById("DetailInvoice");
         modal.style.display = "block";
-        axios.get('invoice/'+invoice.id)
+        axios.get('invoice/detail/'+invoice.id)
         .then(response => {
           if(response.status==200){
             this.productTbls = response.data;

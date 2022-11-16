@@ -28,16 +28,17 @@
 
 [fix ok] filter hóa đơn theo khách hàng, trạng thái
 
-nếu hd đang nợ thì cần trả tiếp hoặc trả hết
+[fix ok] nếu hd đang nợ thì cần trả tiếp hoặc trả hết
+
+[fix ok] in hóa đơn
+ 
+thêm nút print trong revenue và 1 cái thanh đen ngang hiện thông báo và nút print trên /print/id
 
 filter sp hết hàng, gần hết hàng
-in hóa đơn
 
 thêm div về các hóa đơn kh đã mua trong tab khách hàng
 
 tạo thêm tab mới nếu có nhiều kh mua mà chưa thanh toán ngay
-
-
 
 refresh token mượt như fb >> tips javascript
 
