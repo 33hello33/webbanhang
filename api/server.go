@@ -78,6 +78,7 @@ func (server *Server) SetupRoute() {
 	authRoutes.GET("/invoice/list", server.listInvoice)
 	authRoutes.POST("/invoice/find", server.findInvoice)
 	authRoutes.GET("/invoice/:id", server.getDetailInvoice)
+	authRoutes.POST("/invoice/update/:id", server.updateInvoice)
 
 	authRoutes.GET("/revenue", server.revenueHandler)
 

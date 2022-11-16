@@ -91,7 +91,7 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errResponse(err))
 		return
 	}
-	fmt.Println(req)
+
 	fromDate, err := time.Parse("2006-01-02", req.FromDate)
 	if err != nil {
 		err = fmt.Errorf("%w, cannot parse date time: fromdate", err)
@@ -150,7 +150,7 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		IDInvoice:   sql.NullInt64{Int64: IdInvoice, Valid: IdInvoice != 0},
 	})
 	if err != nil {
-		//ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		//return
 		sumTotal = 0
 		log.Println("errno no row to calc sum")
@@ -183,4 +183,25 @@ func (server *Server) getDetailInvoice(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, invoiceDetails)
+}
+
+type updateInvoiceRequest struct {
+	ID int64 `uri:"id"`
+}
+
+func (server *Server) updateInvoice(ctx *gin.Context) {
+	var req updateInvoiceRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	err = server.store.UpdateTotalMoneyInvoice(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
 }

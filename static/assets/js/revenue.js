@@ -87,6 +87,29 @@ appRevenue = createApp({
         .catch(error => {
           console.log(error.data.Error);
           });   
+
+          this.showBtnPaidAllMoney(invoice);
+      },
+      showBtnPaidAllMoney(invoice){
+        if(invoice.is_done === "Nợ"){
+          var modal = document.getElementById("paid_all");
+          modal.style.display = "block";
+        }
+      },
+      PaidAllMoneyLeft(){
+        if(confirm("Are you sure ?")){
+          axios.post('invoice/update/'+this.invoice.id)
+          .then(response => {
+            this.findInvoices(this.from_date, this.to_date, "Tất cả", "", "Tất cả");
+            this.invoice = '';
+
+            var modal = document.getElementById("DetailInvoice");
+            modal.style.display = "none";
+          })
+          .catch(error=>{
+            console.log(error.data.Error)
+          })
+        }
       },
       closeDetailInvoice(){
         var modal = document.getElementById("DetailInvoice");
@@ -96,7 +119,7 @@ appRevenue = createApp({
     beforeMount(){
       this.from_date = this.formatDate();
       this.to_date = this.formatDate();
-      this.findInvoices(this.from_date, this.to_date, "", "", "");
+      this.findInvoices(this.from_date, this.to_date, 'Tất cả', '', 'Tất cả');
       this.filter_by_id = this.filter_ids[0];
       this.filter_by_status = this.filter_status[0];
     },

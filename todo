@@ -26,7 +26,7 @@
 
 [fix ok] set cookie từ server và httponly 
 
-filter hóa đơn theo khách hàng, trạng thái
+[fix ok] filter hóa đơn theo khách hàng, trạng thái
 
 nếu hd đang nợ thì cần trả tiếp hoặc trả hết
 

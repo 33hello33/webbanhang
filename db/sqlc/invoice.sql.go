@@ -321,3 +321,16 @@ func (q *Queries) SumToTalMoney(ctx context.Context, arg SumToTalMoneyParams) (i
 	err := row.Scan(&sum)
 	return sum, err
 }
+
+const updateTotalMoneyInvoice = `-- name: UpdateTotalMoneyInvoice :exec
+update invoices
+set had_paid = total_money,
+    is_done = true,
+    created_at = now()
+where id = $1
+`
+
+func (q *Queries) UpdateTotalMoneyInvoice(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, updateTotalMoneyInvoice, id)
+	return err
+}

@@ -52,3 +52,10 @@ where (created_at between sqlc.arg(created_from) and sqlc.arg(created_to))
     and (name like coalesce(sqlc.narg(name), name)) 
     and (invoices.id = coalesce(sqlc.narg(id_invoice), invoices.id))
     and (invoices.is_done = coalesce(sqlc.narg(is_done),is_done)); 
+
+-- name: UpdateTotalMoneyInvoice :exec
+update invoices
+set had_paid = total_money,
+    is_done = true,
+    created_at = now()
+where id = $1;

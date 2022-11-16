@@ -134,7 +134,9 @@
             <label>Ngày tạo: @{invoice.created_at}</label>
             <label>Khách hàng: @{invoice.name}</label>
             <label>Sdt: @{invoice.phone}</label>
-            
+            <label>Tổng tiền: @{invoice.total_money}</label>
+            <label>Đã trả: @{invoice.had_paid}</label>
+            <label>Trạng thái: @{invoice.is_done}</label>
             <div class="data-table" style="padding: 20px 0 20px 0;">
                 <table class="table table-bordered table-responsive-md table-striped text-center">
                     <thead>
@@ -161,6 +163,7 @@
                     </tbody>
                   </table>
             </div>
+            <button class="btn-warning" id="paid_all" v-on:click="PaidAllMoneyLeft()" style="display: none; border: 2px; border-radius: 20px;"> Trả hết </button>  
         </div>
 
         </div>
