@@ -2,65 +2,9 @@
 <html lang="vi" class="js">
  {{ template "header.html" }}
 
+ <link id="skin-default" rel="stylesheet" href="/assets/css/revenue.css">
 <body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
-    <style>
-        .input-table{
-            background: transparent;
-            border: none;
-            width: 100%;
-        }
-        .inline{
-            display: inline-block; 
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-        #fixedbutton {
-            position: fixed;
-            bottom: 0px;
-            left: 50%;
-            width: 400px;
-        }
 
-        
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-    </style>
     <div  id="root1">
     {{template "menu.html"}}
     </div>
@@ -101,6 +45,7 @@
                              <th class="text-center">Tổng tiền</th>
                              <th class="text-center">Đã trả</th>
                              <th class="text-center">Trạng thái</th>
+                             <th class="text-center">In hd</th>
                            </tr>
                          </thead>
                          <tbody>
@@ -112,6 +57,7 @@
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.total_money"></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.had_paid"></td>
                              <td class="pt-3-half" ><input class="input-table" disabled="true" v-model="invoice.is_done"></td>
+                             <td class="pt-3-half" style="width:100px"><button class="btn btn-danger btn-sm custom-button" v-on:click="printInvoice(invoice.id)">In hd</button></td>
                            </tr>
                          </tbody>
                        </table>
@@ -130,13 +76,26 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span v-on:click="closeDetailInvoice()" class="close">&times;</span>
-            <label>Mã đơn: @{invoice.id}</label>
-            <label>Ngày tạo: @{invoice.created_at}</label>
-            <label>Khách hàng: @{invoice.name}</label>
-            <label>Sdt: @{invoice.phone}</label>
-            <label>Tổng tiền: @{invoice.total_money}</label>
-            <label>Đã trả: @{invoice.had_paid}</label>
-            <label>Trạng thái: @{invoice.is_done}</label>
+            <div class="info-invoice">
+              <div class="123">
+                <label>Mã đơn: @{invoice.id}</label>
+                <br>
+                <label>Ngày tạo: @{invoice.created_at}</label>
+                <br>
+                <label>Tổng tiền: @{invoice.total_money}</label>
+                <br>
+                <label>Đã trả: @{invoice.had_paid}</label>
+                <br>
+                <label>Trạng thái: @{invoice.is_done}</label>
+              </div>
+              <div class="456">
+                <label>Khách hàng: @{invoice.name}</label>
+                <br>
+                <label>Sdt: @{invoice.phone}</label>
+               </div>
+  
+            </div>
+           
             <div class="data-table" style="padding: 20px 0 20px 0;">
                 <table class="table table-bordered table-responsive-md table-striped text-center">
                     <thead>
@@ -163,8 +122,10 @@
                     </tbody>
                   </table>
             </div>
-            <button class="btn-warning" id="paid_all" v-on:click="PaidAllMoneyLeft()" style="display: none; border: 2px; border-radius: 20px;"> Trả hết </button>  
-        </div>
+            <button class="btn-warning" id="paid_all" v-on:click="PaidAllMoneyLeft()" style="display: none; border: 2px; border-radius: 20px; width: 400px;place-self: center;"> Trả hết </button>  
+            <button class="btn btn-danger btn-sm custom-btn" v-on:click="printInvoice(invoice.id)">In hd</button>
+         
+          </div>
 
         </div>
         </div>

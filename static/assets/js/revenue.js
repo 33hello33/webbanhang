@@ -115,6 +115,9 @@ appRevenue = createApp({
         var modal = document.getElementById("DetailInvoice");
         modal.style.display = "none";
       },
+      printInvoice(id){
+        window.open('invoice/print/' + id,'_blank');
+      },
     },
     beforeMount(){
       this.from_date = this.formatDate();
