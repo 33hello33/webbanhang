@@ -89,6 +89,8 @@ appInvoice = createApp({
 
             axios.post('invoice/create', {"invoice" : this.invoice, "products": this.productTbls}).then(response =>{
               if(response.status = 200){
+                this.invoice = response.data.invoice;
+                window.open('invoice/print/' + this.invoice.id,'_blank');
                 this.reset();
               }
             })
