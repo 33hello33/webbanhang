@@ -91,9 +91,11 @@ appRevenue = createApp({
           this.showBtnPaidAllMoney(invoice);
       },
       showBtnPaidAllMoney(invoice){
+        var modal = document.getElementById("paid_all");
         if(invoice.is_done === "Nợ"){
-          var modal = document.getElementById("paid_all");
           modal.style.display = "block";
+        }else{
+          modal.style.display = "none";
         }
       },
       PaidAllMoneyLeft(){
