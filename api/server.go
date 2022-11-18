@@ -92,6 +92,8 @@ func (server *Server) SetupRoute() {
 	authRoutes.PUT("/customer/:id", server.updateCustomer)
 	authRoutes.GET("/customer/search/:name", server.searchCustomer)
 
+	authRoutes.GET("/statistic", server.statisticHandler)
+	authRoutes.POST("/statistic/top_selling_product", server.getTopSellingProduct)
 	server.route = router
 }
 

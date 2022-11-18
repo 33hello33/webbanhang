@@ -24,6 +24,8 @@ appMenu = createApp({
       this.changeColorMenu("customer");
     }else if(url.includes("revenue")){
       this.changeColorMenu("revenue");
+    }else if(url.includes("statistic")){
+      this.changeColorMenu("statistic");
     }
   },
 })

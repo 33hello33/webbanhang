@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi" class="js">
+ {{ template "header.html" }}
+
+ <link id="skin-default" rel="stylesheet" href="/assets/css/revenue.css">
+<body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
+
+    <div  id="root1">
+    {{template "menu.html"}}
+    </div>
+    <div class="nk-app-root" id="root">
+
+        <!-- main @s  -->
+        <div class="nk-main ">
+        <!-- wrap @s  -->
+        div class="nk-wrap nk-wrap-nosidebar">
+        <!-- content @s  -->
+        <div class="nk-content ">
+        <div class="nk-block nk-auth-body  wide-xs">
+
+        <div class="card">
+            <div class="date">
+                <a>Từ ngày</a> <input type="date" id="from_date" name="from_date" v-model="from_date" class="inline">
+                <a>Đến ngày</a> <input type="date" id="to_date" name="to_date" v-model="to_date" class="inline">
+                <select class="form-control inline" v-model="filter_by_id" @change="onChangeFilterID()" style="width: 150px;">
+                             <option v-for="id in filter_ids" :value="id"> @{id}</option>
+                 </select>
+                 <input type="text" ref="filter_input" v-model="filter_input" class="form-control inline" style="width: 150px;"> 
+                 <select class="form-control inline" v-model="filter_by_status" style="width: 150px;">
+                    <option v-for="status in filter_status">@{status}</option> 
+                </select>
+                <button v-on:click="findAll()" class="inline">Tìm</button> 
+            </div>
+            <a>Tổng giá trị: @{total_price_all_invoice}</a>
+            <a>Top 5 sp bán chạy</a>
+            <ul>
+              <li v-for="selling_product in top_selling_products">@{selling_product.name} : @{selling_product.selling_amount} sp đã bán</li>
+            </ul>
+            </div>
+        </div>
+                </div>
+                <!-- wrap @e  -->
+            </div>
+            <!-- content @e  -->
+
+        </div>
+        <!-- main @e  -->
+    <script src="/assets/js/statistic.js">
+    </script>
+</body>
+</html>
