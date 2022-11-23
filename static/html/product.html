@@ -40,7 +40,7 @@
                     </div>
                     </div>
                 </div>
-                <div class ="right-panel" style="width: 70%; float:right" >
+                <div id="normal" class ="right-panel" style="width: 70%; float:right" >
                 <div class="nk-block-head">
                     <div class="nk-block-head-content">
                         <h4 class="nk-block-title" ref="headerProduct" id="headerProduct">Thêm Sản Phẩm</h4>
@@ -84,9 +84,19 @@
                         <button type="button" ref="buttonProduct" id="buttonProduct" v-on:click="createProduct(product)" class="btn btn-lg btn-primary btn-block">Thêm Sản Phẩm</button>
                     </div>
                 </form>
+
+                <div id="import_from_excel">
+                    <input id="input_file_import" type="file" name="file" ref="file" v-on:change="inputFileChange()">
+                    <button v-on:click="uploadFile()">Nhập file</button>  
                 </div>
+                <div id="export_to_excel">
+                    <button v-on:click="exportFile()" id="export_to_file">Xuất file</button>    
+                </div>
+                </div>
+            
+            </div>
         </div>
-                        </div>
+
                     </div>
                 </div>
                 <!-- wrap @e  -->

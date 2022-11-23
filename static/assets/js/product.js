@@ -8,6 +8,7 @@ appProduct = createApp({
       isUpdate: false,
       timeOut: 0,
       searchInput: '',
+      file:'',
     }
   },
   methods: {
@@ -145,7 +146,42 @@ appProduct = createApp({
        .catch(error => {
          console.log(error.data.Error);
          });  
-    }
+    },
+    uploadFile(){
+      let formData = new FormData();
+      console.log(this.file);
+      formData.append('file', this.file);
+      axios.post('product/import_from_file',
+        formData,
+        {
+          headers:{'Content-Type':'multipart/form-data'}
+        })
+        .then(response =>{
+          console.log(response.data);
+        })
+        .catch(error =>{
+          console.log(error.data);
+        })
+    },
+    inputFileChange(){
+      this.file=this.$refs.file.files[0];
+    },
+    exportFile(){
+      const url = 'http://localhost:8080/product/export_to_file';
+        axios.get('product/export_to_file',
+          {responseType : 'blob'})
+        .then(({data}) => {
+          //var obj = JSON.parse(data);
+          //console.log(obj);
+          const downloadUrl = window.URL.createObjectURL(new Blob([data]));
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.setAttribute('download', 'file.csv'); //any other extension
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        }); 
+      },
   },
   beforeMount(){
     this.listProduct();

@@ -1,9 +1,13 @@
 package api
 
 import (
+	"bytes"
+	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"os/exec"
 	"strconv"
 	"time"
 	db "webbanhang/db/sqlc"
@@ -246,4 +250,92 @@ func (server *Server) copyProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, product)
+}
+
+func (server *Server) importProductFromFile(ctx *gin.Context) {
+	formFile, err := ctx.FormFile("file")
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+
+	openFile, err := formFile.Open()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	csvLines, err := csv.NewReader(openFile).ReadAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	for _, line := range csvLines {
+		PriceImport, err := strconv.ParseInt(line[3], 10, 64)
+		if err != nil {
+			continue
+		}
+
+		Amount, err := strconv.ParseInt(line[4], 10, 64)
+		if err != nil {
+			continue
+		}
+
+		Price, err := strconv.ParseInt(line[5], 10, 64)
+		if err != nil {
+			continue
+		}
+
+		IdSupplier, err := strconv.ParseInt(line[8], 10, 64)
+		if err != nil {
+			continue
+		}
+
+		arg := db.CreateProductParams{
+			Name:        line[1],
+			Unit:        line[2],
+			PriceImport: PriceImport,
+			Price:       Price,
+			Amount:      Amount,
+			Warehouse:   line[6],
+			IDSupplier:  IdSupplier,
+		}
+		_, err = server.store.CreateProduct(ctx, arg)
+		if err != nil {
+			log.Println(line)
+			log.Println(err)
+		}
+	}
+	ctx.JSON(http.StatusOK, nil)
+}
+
+func (server *Server) exportProductToFile(ctx *gin.Context) {
+
+	cmd := "docker exec postgres12 psql -d webbanhang -c \"COPY products to stdout csv header\""
+
+	//  export file products.csv to docker
+	err, out, _ := execCommandline(cmd)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errResponse(err))
+		return
+	}
+
+	ctx.Data(http.StatusOK, "application/vnd.ms-excel", []byte(out.String()))
+}
+
+func execCommandline(command string) (err error, out bytes.Buffer, stderr bytes.Buffer) {
+	fmt.Println(command)
+	cmd := exec.Command("powershell", command)
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+		return
+	}
+
+	fmt.Println("Result: " + out.String())
+	return
 }

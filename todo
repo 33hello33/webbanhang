@@ -34,16 +34,28 @@
  
 [fix ok] thêm nút print trong revenue và 1 cái thanh đen ngang hiện thông báo và nút print trên /print/id
 
+[fix ok] thống kê sp bán theo tuần, tháng năm
+
+thêm tổng doanh thu, số đơn hàng
+
+hiện thông báo khi không xóa được, do đang tồn tại trong đâu đó
+
+nhà cc không trong sp, thêm số bank, zalo 
+thêm sp từ exel
+
+xuất sp ra exel
+
+thêm mã vạch EAN13, quét mã vạch 
+
 filter sp hết hàng, gần hết hàng
 
 thêm div về các hóa đơn kh đã mua trong tab khách hàng
 
-tạo thêm tab mới nếu có nhiều kh mua mà chưa thanh toán ngay
+tạo thêm tab mới nếu có nhiều kh mua mà chưa thanh toán ngay >> chỉ cần duplicate tab invoice
 
 refresh token mượt như fb >> tips javascript
 
-thêm sp từ exel
-xuất sp ra exel
+
 
 write unit test 
 
@@ -57,6 +69,6 @@ ngăn usr click liền tục
 
 thêm log
 
-thống kê sp bán theo tuần, tháng năm
+
 thống kê khách hàng
 thống kê doanh thu
