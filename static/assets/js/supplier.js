@@ -2,7 +2,7 @@ appSupplier = createApp({
     delimiters: ['@{', '}'],
     data() {
       return{
-        supplier: {id: 0, name: '', phone: '', address: '', notes: ''},
+        supplier: {id: 0, name: '', phone: '', zalo: '', address: '', notes: '', bank_name:'', bank_number: ''},
         suppliers: [],
         isUpdate: false,
         searchInput: '',
@@ -35,7 +35,7 @@ appSupplier = createApp({
     addSupplier() {
       this.isUpdate = false;
       this.changeHeader();
-      this.supplier = {id: 0, name: '', phone: '', address: '', notes: ''};
+      this.supplier = {id: 0, name: '', phone: '', zalo: '', address: '', notes: '', bank_name:'', bank_number: ''};
     },
     createSupplier(supplier, supplierIndex) {
       if(this.isUpdate == false){
@@ -65,7 +65,7 @@ appSupplier = createApp({
       axios.get('supplier/list').then(response =>{
         if(response.status == 200){
           this.suppliers =  response.data;
-          this.supplier = {id: 0, name: '', phone: '', address: '', notes: ''};
+          this.supplier = {id: 0, name: '', phone: '', zalo: '', address: '', notes: '', bank_name:'', bank_number: ''};
         }
       });
     },
@@ -92,7 +92,7 @@ appSupplier = createApp({
         axios.delete('supplier/'+ supplier.id).then(response =>{
           if(response.status == 200){
             this.suppliers.splice(supplierIndex,1);
-            this.supplier = {id: 0, name: '', phone: '', address: '', notes: ''};
+            this.supplier = {id: 0, name: '', phone: '', zalo: '', address: '', notes: '', bank_name:'', bank_number: ''};
           }
         });
       }

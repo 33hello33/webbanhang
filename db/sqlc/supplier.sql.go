@@ -14,26 +14,35 @@ const createSupplier = `-- name: CreateSupplier :one
 insert into suppliers(
     name,
     phone,
+    zalo,
     address,
-    notes
+    notes,
+    bank_name,
+    bank_number
 )values(
-    $1,$2,$3,$4
+    $1,$2,$3,$4,$5,$6,$7
 ) returning id, name, phone, zalo, address, notes, bank_name, bank_number
 `
 
 type CreateSupplierParams struct {
-	Name    string         `json:"name"`
-	Phone   string         `json:"phone"`
-	Address sql.NullString `json:"address"`
-	Notes   sql.NullString `json:"notes"`
+	Name       string         `json:"name"`
+	Phone      string         `json:"phone"`
+	Zalo       sql.NullString `json:"zalo"`
+	Address    sql.NullString `json:"address"`
+	Notes      sql.NullString `json:"notes"`
+	BankName   sql.NullString `json:"bank_name"`
+	BankNumber sql.NullString `json:"bank_number"`
 }
 
 func (q *Queries) CreateSupplier(ctx context.Context, arg CreateSupplierParams) (Supplier, error) {
 	row := q.db.QueryRowContext(ctx, createSupplier,
 		arg.Name,
 		arg.Phone,
+		arg.Zalo,
 		arg.Address,
 		arg.Notes,
+		arg.BankName,
+		arg.BankNumber,
 	)
 	var i Supplier
 	err := row.Scan(
@@ -173,17 +182,20 @@ func (q *Queries) SearchSupplierLikeName(ctx context.Context, name string) ([]Su
 
 const updateSupplier = `-- name: UpdateSupplier :one
 update suppliers 
-set name = $2, address = $3, phone = $4, notes = $5
+set name = $2, address = $3, phone = $4, zalo = $5, notes = $6, bank_name=$7, bank_number=$8
 where id = $1
 returning id, name, phone, zalo, address, notes, bank_name, bank_number
 `
 
 type UpdateSupplierParams struct {
-	ID      int64          `json:"id"`
-	Name    string         `json:"name"`
-	Address sql.NullString `json:"address"`
-	Phone   string         `json:"phone"`
-	Notes   sql.NullString `json:"notes"`
+	ID         int64          `json:"id"`
+	Name       string         `json:"name"`
+	Address    sql.NullString `json:"address"`
+	Phone      string         `json:"phone"`
+	Zalo       sql.NullString `json:"zalo"`
+	Notes      sql.NullString `json:"notes"`
+	BankName   sql.NullString `json:"bank_name"`
+	BankNumber sql.NullString `json:"bank_number"`
 }
 
 func (q *Queries) UpdateSupplier(ctx context.Context, arg UpdateSupplierParams) (Supplier, error) {
@@ -192,7 +204,10 @@ func (q *Queries) UpdateSupplier(ctx context.Context, arg UpdateSupplierParams) 
 		arg.Name,
 		arg.Address,
 		arg.Phone,
+		arg.Zalo,
 		arg.Notes,
+		arg.BankName,
+		arg.BankNumber,
 	)
 	var i Supplier
 	err := row.Scan(

@@ -2,9 +2,8 @@ appProduct = createApp({
   delimiters: ['@{', '}'],
   data() {
     return{
-      product: {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0},
+      product: {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''},
       products: [],
-      suppliers: [],
       isUpdate: false,
       timeOut: 0,
       searchInput: '',
@@ -37,13 +36,13 @@ appProduct = createApp({
     addProduct() {
       this.isUpdate = false;
       this.changeHeader();
-      this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
+      this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''};
     },
     listProduct(){
       axios.get('product/list').then(response =>{
         if(response.status == 200){
           this.products = response.data;
-          this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
+          this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''};
         }
       })
       .catch(error => {
@@ -52,30 +51,6 @@ appProduct = createApp({
     },
     createProduct(product){
       if(this.isUpdate == false){ // create product
-        // send info supplier, if not exist, create new supplier
-        if(product.id_supplier == ""){
-          axios.post('supplier/create', {"name": "Mua lẻ","phone": "0", "address":"", "notes":""})
-          .then(response =>{
-            if(response.status == 200){
-              product.id_supplier = response.data.id;
-
-              // create product
-              axios.post('product/create',product)
-              .then(response => {
-                if(response.status == 200){
-                    this.listProduct();
-                }
-              })
-              .catch(error => {
-                console.log(error.data.Error);
-                });  
-            }
-          })
-          .catch(error =>{
-            console.log(error.data.Error);
-          });
-        }else{
-        // create product
         axios.post('product/create',product)
         .then(response => {
           if(response.status == 200){
@@ -85,7 +60,6 @@ appProduct = createApp({
         .catch(error => {
           console.log(error.data.Error);
           });  
-        }
       }else{ // update product
         axios.put('product/update', product)
         .then(  response => {
@@ -124,7 +98,7 @@ appProduct = createApp({
         .then(response =>{
           if(response.status == 200){
             this.products.splice(productIndex,1);
-            this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
+            this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''};
           }
         })
         .catch(error =>{
@@ -135,13 +109,6 @@ appProduct = createApp({
           }
         });
       }
-    },
-    listSupplier(){
-      axios.get('supplier/list').then(response =>{
-        if(response.status == 200){
-          this.suppliers =  response.data;
-        }
-      });
     },
     copyProduct(product){
        // create product
@@ -193,7 +160,6 @@ appProduct = createApp({
   },
   beforeMount(){
     this.listProduct();
-    this.listSupplier();
   },
 });
 appProduct.mount("#root")

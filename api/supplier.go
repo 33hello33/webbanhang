@@ -13,10 +13,13 @@ func (server *Server) supplierHandler(ctx *gin.Context) {
 }
 
 type createSupplierRequest struct {
-	Name    string `json:"name"`
-	Address string `json:"address"`
-	Phone   string `json:"phone"`
-	Notes   string `json:"notes"`
+	Name       string `json:"name"`
+	Address    string `json:"address"`
+	Phone      string `json:"phone"`
+	Zalo       string `json:"zalo"`
+	Notes      string `json:"notes"`
+	BankName   string `json:"bank_name"`
+	BankNumber string `json:"bank_number"`
 }
 
 func (server *Server) createSupplier(ctx *gin.Context) {
@@ -46,6 +49,15 @@ func (server *Server) createSupplier(ctx *gin.Context) {
 				Notes: sql.NullString{
 					String: req.Notes,
 					Valid:  len(req.Notes) != 0},
+				Zalo: sql.NullString{
+					String: req.Zalo,
+					Valid:  len(req.Zalo) != 0},
+				BankName: sql.NullString{
+					String: req.BankName,
+					Valid:  len(req.BankName) != 0},
+				BankNumber: sql.NullString{
+					String: req.BankNumber,
+					Valid:  len(req.BankNumber) != 0},
 			}
 
 			supplier, err = server.store.CreateSupplier(ctx, arg)
@@ -68,11 +80,14 @@ type getSupplierRequest struct {
 }
 
 type getSupplierReponse struct {
-	ID      int64  `json:"id"`
-	Name    string `json:"name"`
-	Phone   string `json:"phone"`
-	Address string `json:"address"`
-	Notes   string `json:"notes"`
+	ID         int64  `json:"id"`
+	Name       string `json:"name"`
+	Phone      string `json:"phone"`
+	Address    string `json:"address"`
+	Zalo       string `json:"zalo"`
+	Notes      string `json:"notes"`
+	BankName   string `json:"bank_name"`
+	BankNumber string `json:"bank_number"`
 }
 
 func (server *Server) getSupplier(ctx *gin.Context) {
@@ -90,11 +105,14 @@ func (server *Server) getSupplier(ctx *gin.Context) {
 	}
 
 	res := getSupplierReponse{
-		ID:      supplier.ID,
-		Name:    supplier.Name,
-		Phone:   supplier.Phone,
-		Address: supplier.Address.String,
-		Notes:   supplier.Notes.String,
+		ID:         supplier.ID,
+		Name:       supplier.Name,
+		Phone:      supplier.Phone,
+		Address:    supplier.Address.String,
+		Notes:      supplier.Notes.String,
+		Zalo:       supplier.Zalo.String,
+		BankName:   supplier.BankName.String,
+		BankNumber: supplier.BankNumber.String,
 	}
 
 	ctx.JSON(http.StatusOK, res)
@@ -148,11 +166,14 @@ func (server *Server) deleteSupplier(ctx *gin.Context) {
 }
 
 type updateSupplierRequest struct {
-	ID      int64  `json:"id"`
-	Name    string `json:"name"`
-	Address string `json:"address"`
-	Phone   string `json:"phone"`
-	Notes   string `json:"notes"`
+	ID         int64  `json:"id"`
+	Name       string `json:"name"`
+	Address    string `json:"address"`
+	Phone      string `json:"phone"`
+	Notes      string `json:"notes"`
+	Zalo       string `json:"zalo"`
+	BankNumber string `json:"bank_number"`
+	BankName   string `json:"bank_name"`
 }
 
 func (server *Server) updateSupplier(ctx *gin.Context) {
@@ -164,11 +185,14 @@ func (server *Server) updateSupplier(ctx *gin.Context) {
 	}
 
 	arg := db.UpdateSupplierParams{
-		ID:      req.ID,
-		Name:    req.Name,
-		Address: sql.NullString{String: req.Address, Valid: req.Address != ""},
-		Phone:   req.Phone,
-		Notes:   sql.NullString{String: req.Notes, Valid: req.Notes != ""},
+		ID:         req.ID,
+		Name:       req.Name,
+		Address:    sql.NullString{String: req.Address, Valid: req.Address != ""},
+		Phone:      req.Phone,
+		Notes:      sql.NullString{String: req.Notes, Valid: req.Notes != ""},
+		Zalo:       sql.NullString{String: req.Zalo, Valid: req.Zalo != ""},
+		BankName:   sql.NullString{String: req.BankName, Valid: req.BankName != ""},
+		BankNumber: sql.NullString{String: req.BankNumber, Valid: req.BankNumber != ""},
 	}
 	_, err = server.store.UpdateSupplier(ctx, arg)
 	if err != nil {

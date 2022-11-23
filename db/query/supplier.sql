@@ -2,10 +2,13 @@
 insert into suppliers(
     name,
     phone,
+    zalo,
     address,
-    notes
+    notes,
+    bank_name,
+    bank_number
 )values(
-    $1,$2,$3,$4
+    $1,$2,$3,$4,$5,$6,$7
 ) returning *;
 
 -- name: GetSupplier :one
@@ -18,7 +21,7 @@ order by name;
 
 -- name: UpdateSupplier :one
 update suppliers 
-set name = $2, address = $3, phone = $4, notes = $5
+set name = $2, address = $3, phone = $4, zalo = $5, notes = $6, bank_name=$7, bank_number=$8
 where id = $1
 returning *;
 

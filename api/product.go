@@ -26,7 +26,6 @@ type createProductRequest struct {
 	Amount      int64  `json:"amount"`
 	Price       int64  `json:"price"`
 	WareHouse   string `json:"warehouse"`
-	IdSupplier  int64  `json:"id_supplier"`
 }
 
 func (server *Server) createProduct(ctx *gin.Context) {
@@ -44,7 +43,6 @@ func (server *Server) createProduct(ctx *gin.Context) {
 		PriceImport: req.PriceImport,
 		Amount:      req.Amount,
 		Warehouse:   req.WareHouse,
-		IDSupplier:  req.IdSupplier,
 	}
 
 	product, err := server.store.CreateProduct(ctx, arg)
@@ -113,7 +111,6 @@ type getProductResponse struct {
 	Amount      int64  `json:"amount"`
 	Price       int64  `json:"price"`
 	WareHouse   string `json:"warehouse"`
-	IdSupplier  int64  `json:"id_supplier"`
 }
 
 func (server *Server) getProduct(ctx *gin.Context) {
@@ -138,7 +135,6 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		Amount:      product.Amount,
 		Price:       product.Price,
 		WareHouse:   product.Warehouse,
-		IdSupplier:  product.IDSupplier,
 	}
 
 	// convert product to byte and set to redis
@@ -169,7 +165,6 @@ func (server *Server) updateProduct(ctx *gin.Context) {
 		Price:       req.Price,
 		PriceImport: req.PriceImport,
 		Warehouse:   req.WareHouse,
-		IDSupplier:  req.IdSupplier,
 		Unit:        req.Unit,
 		Name:        req.Name,
 	})
@@ -287,11 +282,6 @@ func (server *Server) importProductFromFile(ctx *gin.Context) {
 			continue
 		}
 
-		IdSupplier, err := strconv.ParseInt(line[8], 10, 64)
-		if err != nil {
-			continue
-		}
-
 		arg := db.CreateProductParams{
 			Name:        line[1],
 			Unit:        line[2],
@@ -299,7 +289,6 @@ func (server *Server) importProductFromFile(ctx *gin.Context) {
 			Price:       Price,
 			Amount:      Amount,
 			Warehouse:   line[6],
-			IDSupplier:  IdSupplier,
 		}
 		_, err = server.store.CreateProduct(ctx, arg)
 		if err != nil {

@@ -71,14 +71,6 @@
                         <label class="form-label" for="warehouse">Kho</label>
                         <input v-model="product.warehouse" type="text" class="form-control form-control-lg" name="warehouse" placeholder="Kho để sản phẩm" required="">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="id_supplier">Nhà Cung Cấp</label>
-                        <!--<input v-model="product.id_supplier" type="number" class="form-control form-control-lg" name="id_supplier" placeholder="Dùng để lấy lại mật khẩu" required=""> -->
-                        <select class="form-control" v-model="product.id_supplier" >
-                             <option v-for="(supplier, supplierIndex) in suppliers" v-bind:value="supplier.id">@{supplier.name}</option> 
-                        </select>
-                        
-                    </div>
 
                     <div class="form-group">
                         <button type="button" ref="buttonProduct" id="buttonProduct" v-on:click="createProduct(product)" class="btn btn-lg btn-primary btn-block">Thêm Sản Phẩm</button>
