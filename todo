@@ -42,9 +42,11 @@
 
 [fix ok] hiện thông báo khi không xóa được, do đang tồn tại trong đâu đó, cần phải xóa trc mới xóa dc cái này
 
-nhà cc không trong sp, thêm số bank, zalo 
+[fix ok] nhà cc không trong sp, thêm số bank, zalo 
 
-thêm mã vạch EAN13, quét mã vạch 
+thêm mã vạch EAN13
+quét mã vạch 
+in mã vạch
 
 filter sp hết hàng, gần hết hàng
 

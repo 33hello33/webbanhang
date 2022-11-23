@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="vi" class="js">
  {{ template "header.html" }}
-
+ <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.ean-upc.min.js"></script>
 <body class="nk-body bg-white npc-default pg-auth no-touch nk-nio-theme">
     {{template "menu.html"}}
 
@@ -71,7 +71,11 @@
                         <label class="form-label" for="warehouse">Kho</label>
                         <input v-model="product.warehouse" type="text" class="form-control form-control-lg" name="warehouse" placeholder="Kho để sản phẩm" required="">
                     </div>
-
+                    <div class="form-group">
+                        <label class="form-label" for="barcode">Mã Vạch</label>
+                        <input v-model="product.barcode" type="text" class="form-control form-control-lg" name="barcode" placeholder="Mã vạch" required="">
+                    </div>
+                    <svg id="barcode"></svg>
                     <div class="form-group">
                         <button type="button" ref="buttonProduct" id="buttonProduct" v-on:click="createProduct(product)" class="btn btn-lg btn-primary btn-block">Thêm Sản Phẩm</button>
                     </div>
@@ -99,5 +103,11 @@
     </div>
 
     <script src="/assets/js/product.js"></script>
+    <script >
+        JsBarcode("#barcode")
+        .options({width:1.5,height:50,})
+        .EAN13("155123123123", {fontSize: 12, textMargin: 0})
+        .render();
+    </script>
 </body>
 </html>
