@@ -5,10 +5,9 @@ insert into products(
     price,
     price_import,
     amount,
-    warehouse,
-    id_supplier
+    warehouse
 )values(
-    $1,$2,$3,$4,$5,$6,$7
+    $1,$2,$3,$4,$5,$6
 ) returning *;
 
 -- name: GetProduct :one
@@ -30,9 +29,8 @@ set amount = $2,
 price = $3, 
 price_import = $4, 
 warehouse = $5,
-id_supplier = $6,
-unit = $7,
-name = $8
+unit = $6,
+name = $7
 where id = $1
 returning *;
 
@@ -57,15 +55,13 @@ insert into products(
     price,
     price_import,
     amount,
-    warehouse,
-    id_supplier)
+    warehouse)
 select concat(name, '(copy)'), 
     unit,
     price,
     price_import,
     amount,
-    warehouse,
-    id_supplier
+    warehouse
 from products as pd
 where pd.id = $1
 returning *;

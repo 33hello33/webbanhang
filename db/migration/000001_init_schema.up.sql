@@ -14,16 +14,18 @@ CREATE TABLE "products" (
   "amount" bigint NOT NULL DEFAULT 0,
   "price" bigint NOT NULL DEFAULT 0,
   "warehouse" varchar NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT (now()),
-  "id_supplier" bigserial NOT NULL
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "suppliers" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "phone" varchar NOT NULL,
+  "zalo" varchar,
   "address" varchar,
-  "notes" varchar
+  "notes" varchar,
+  "bank_name" varchar,
+  "bank_number" varchar
 );
 
 CREATE TABLE "customers" (
@@ -61,8 +63,6 @@ CREATE INDEX ON "products" ("name");
 CREATE INDEX ON "suppliers" ("name");
 
 CREATE INDEX ON "customers" ("phone");
-
-ALTER TABLE "products" ADD FOREIGN KEY ("id_supplier") REFERENCES "suppliers" ("id");
 
 ALTER TABLE "invoices" ADD FOREIGN KEY ("customers_id") REFERENCES "customers" ("id");
 

@@ -56,7 +56,6 @@ type Product struct {
 	Price       int64     `json:"price"`
 	Warehouse   string    `json:"warehouse"`
 	CreatedAt   time.Time `json:"created_at"`
-	IDSupplier  int64     `json:"id_supplier"`
 }
 
 type Session struct {
@@ -71,9 +70,12 @@ type Session struct {
 }
 
 type Supplier struct {
-	ID      int64          `json:"id"`
-	Name    string         `json:"name"`
-	Phone   string         `json:"phone"`
-	Address sql.NullString `json:"address"`
-	Notes   sql.NullString `json:"notes"`
+	ID         int64          `json:"id"`
+	Name       string         `json:"name"`
+	Phone      string         `json:"phone"`
+	Zalo       sql.NullString `json:"zalo"`
+	Address    sql.NullString `json:"address"`
+	Notes      sql.NullString `json:"notes"`
+	BankName   sql.NullString `json:"bank_name"`
+	BankNumber sql.NullString `json:"bank_number"`
 }

@@ -18,7 +18,7 @@ insert into suppliers(
     notes
 )values(
     $1,$2,$3,$4
-) returning id, name, phone, address, notes
+) returning id, name, phone, zalo, address, notes, bank_name, bank_number
 `
 
 type CreateSupplierParams struct {
@@ -40,8 +40,11 @@ func (q *Queries) CreateSupplier(ctx context.Context, arg CreateSupplierParams) 
 		&i.ID,
 		&i.Name,
 		&i.Phone,
+		&i.Zalo,
 		&i.Address,
 		&i.Notes,
+		&i.BankName,
+		&i.BankNumber,
 	)
 	return i, err
 }
@@ -57,7 +60,7 @@ func (q *Queries) DeleteSupplier(ctx context.Context, id int64) error {
 }
 
 const getSupplier = `-- name: GetSupplier :one
-select id, name, phone, address, notes from suppliers
+select id, name, phone, zalo, address, notes, bank_name, bank_number from suppliers
 where id = $1 limit 1
 `
 
@@ -68,14 +71,17 @@ func (q *Queries) GetSupplier(ctx context.Context, id int64) (Supplier, error) {
 		&i.ID,
 		&i.Name,
 		&i.Phone,
+		&i.Zalo,
 		&i.Address,
 		&i.Notes,
+		&i.BankName,
+		&i.BankNumber,
 	)
 	return i, err
 }
 
 const getSupplierByPhone = `-- name: GetSupplierByPhone :one
-select id, name, phone, address, notes from suppliers
+select id, name, phone, zalo, address, notes, bank_name, bank_number from suppliers
 where phone = $1
 `
 
@@ -86,8 +92,11 @@ func (q *Queries) GetSupplierByPhone(ctx context.Context, phone string) (Supplie
 		&i.ID,
 		&i.Name,
 		&i.Phone,
+		&i.Zalo,
 		&i.Address,
 		&i.Notes,
+		&i.BankName,
+		&i.BankNumber,
 	)
 	return i, err
 }
@@ -126,7 +135,7 @@ func (q *Queries) ListSupplier(ctx context.Context) ([]ListSupplierRow, error) {
 }
 
 const searchSupplierLikeName = `-- name: SearchSupplierLikeName :many
-select id, name, phone, address, notes from suppliers
+select id, name, phone, zalo, address, notes, bank_name, bank_number from suppliers
 where name like $1
 `
 
@@ -143,8 +152,11 @@ func (q *Queries) SearchSupplierLikeName(ctx context.Context, name string) ([]Su
 			&i.ID,
 			&i.Name,
 			&i.Phone,
+			&i.Zalo,
 			&i.Address,
 			&i.Notes,
+			&i.BankName,
+			&i.BankNumber,
 		); err != nil {
 			return nil, err
 		}
@@ -163,7 +175,7 @@ const updateSupplier = `-- name: UpdateSupplier :one
 update suppliers 
 set name = $2, address = $3, phone = $4, notes = $5
 where id = $1
-returning id, name, phone, address, notes
+returning id, name, phone, zalo, address, notes, bank_name, bank_number
 `
 
 type UpdateSupplierParams struct {
@@ -187,8 +199,11 @@ func (q *Queries) UpdateSupplier(ctx context.Context, arg UpdateSupplierParams) 
 		&i.ID,
 		&i.Name,
 		&i.Phone,
+		&i.Zalo,
 		&i.Address,
 		&i.Notes,
+		&i.BankName,
+		&i.BankNumber,
 	)
 	return i, err
 }

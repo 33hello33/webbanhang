@@ -16,18 +16,16 @@ insert into products(
     price,
     price_import,
     amount,
-    warehouse,
-    id_supplier)
+    warehouse)
 select concat(name, '(copy)'), 
     unit,
     price,
     price_import,
     amount,
-    warehouse,
-    id_supplier
+    warehouse
 from products as pd
 where pd.id = $1
-returning id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier
+returning id, name, unit, price_import, amount, price, warehouse, created_at
 `
 
 func (q *Queries) CopyProduct(ctx context.Context, id int64) (Product, error) {
@@ -42,7 +40,6 @@ func (q *Queries) CopyProduct(ctx context.Context, id int64) (Product, error) {
 		&i.Price,
 		&i.Warehouse,
 		&i.CreatedAt,
-		&i.IDSupplier,
 	)
 	return i, err
 }
@@ -54,11 +51,10 @@ insert into products(
     price,
     price_import,
     amount,
-    warehouse,
-    id_supplier
+    warehouse
 )values(
-    $1,$2,$3,$4,$5,$6,$7
-) returning id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier
+    $1,$2,$3,$4,$5,$6
+) returning id, name, unit, price_import, amount, price, warehouse, created_at
 `
 
 type CreateProductParams struct {
@@ -68,7 +64,6 @@ type CreateProductParams struct {
 	PriceImport int64  `json:"price_import"`
 	Amount      int64  `json:"amount"`
 	Warehouse   string `json:"warehouse"`
-	IDSupplier  int64  `json:"id_supplier"`
 }
 
 func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
@@ -79,7 +74,6 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 		arg.PriceImport,
 		arg.Amount,
 		arg.Warehouse,
-		arg.IDSupplier,
 	)
 	var i Product
 	err := row.Scan(
@@ -91,7 +85,6 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 		&i.Price,
 		&i.Warehouse,
 		&i.CreatedAt,
-		&i.IDSupplier,
 	)
 	return i, err
 }
@@ -106,7 +99,7 @@ func (q *Queries) DeleteProduct(ctx context.Context, id int64) error {
 }
 
 const getProduct = `-- name: GetProduct :one
-select id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier from products
+select id, name, unit, price_import, amount, price, warehouse, created_at from products
 where id=$1 limit 1
 `
 
@@ -122,13 +115,12 @@ func (q *Queries) GetProduct(ctx context.Context, id int64) (Product, error) {
 		&i.Price,
 		&i.Warehouse,
 		&i.CreatedAt,
-		&i.IDSupplier,
 	)
 	return i, err
 }
 
 const getProductForUpdate = `-- name: GetProductForUpdate :one
-select id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier from products
+select id, name, unit, price_import, amount, price, warehouse, created_at from products
 where id=$1 limit 1
 for no key update
 `
@@ -145,7 +137,6 @@ func (q *Queries) GetProductForUpdate(ctx context.Context, id int64) (Product, e
 		&i.Price,
 		&i.Warehouse,
 		&i.CreatedAt,
-		&i.IDSupplier,
 	)
 	return i, err
 }
@@ -184,7 +175,7 @@ func (q *Queries) ListProducts(ctx context.Context) ([]ListProductsRow, error) {
 }
 
 const searchProductLikeName = `-- name: SearchProductLikeName :many
-select id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier from products
+select id, name, unit, price_import, amount, price, warehouse, created_at from products
 where name like $1
 `
 
@@ -206,7 +197,6 @@ func (q *Queries) SearchProductLikeName(ctx context.Context, name string) ([]Pro
 			&i.Price,
 			&i.Warehouse,
 			&i.CreatedAt,
-			&i.IDSupplier,
 		); err != nil {
 			return nil, err
 		}
@@ -225,7 +215,7 @@ const updateAmountProduct = `-- name: UpdateAmountProduct :one
 update products
 set amount=amount-$2
 where id=$1
-returning id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier
+returning id, name, unit, price_import, amount, price, warehouse, created_at
 `
 
 type UpdateAmountProductParams struct {
@@ -245,7 +235,6 @@ func (q *Queries) UpdateAmountProduct(ctx context.Context, arg UpdateAmountProdu
 		&i.Price,
 		&i.Warehouse,
 		&i.CreatedAt,
-		&i.IDSupplier,
 	)
 	return i, err
 }
@@ -256,11 +245,10 @@ set amount = $2,
 price = $3, 
 price_import = $4, 
 warehouse = $5,
-id_supplier = $6,
-unit = $7,
-name = $8
+unit = $6,
+name = $7
 where id = $1
-returning id, name, unit, price_import, amount, price, warehouse, created_at, id_supplier
+returning id, name, unit, price_import, amount, price, warehouse, created_at
 `
 
 type UpdateProductParams struct {
@@ -269,7 +257,6 @@ type UpdateProductParams struct {
 	Price       int64  `json:"price"`
 	PriceImport int64  `json:"price_import"`
 	Warehouse   string `json:"warehouse"`
-	IDSupplier  int64  `json:"id_supplier"`
 	Unit        string `json:"unit"`
 	Name        string `json:"name"`
 }
@@ -281,7 +268,6 @@ func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (P
 		arg.Price,
 		arg.PriceImport,
 		arg.Warehouse,
-		arg.IDSupplier,
 		arg.Unit,
 		arg.Name,
 	)
@@ -295,7 +281,6 @@ func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (P
 		&i.Price,
 		&i.Warehouse,
 		&i.CreatedAt,
-		&i.IDSupplier,
 	)
 	return i, err
 }
