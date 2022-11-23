@@ -10,7 +10,7 @@
 
 [fix ok] get detail invoice
 
-[fix ok] sum total money
+[fix ok] thêm tổng doanh thu, số đơn hàng
 
 [fix ok] sử dụng redis cache lưu sản phẩm
 
@@ -36,14 +36,13 @@
 
 [fix ok] thống kê sp bán theo tuần, tháng năm
 
-thêm tổng doanh thu, số đơn hàng
+[fix ok] thêm sp từ exel
 
-hiện thông báo khi không xóa được, do đang tồn tại trong đâu đó
+[fix ok] xuất sp ra exel
+
+[fix ok] hiện thông báo khi không xóa được, do đang tồn tại trong đâu đó, cần phải xóa trc mới xóa dc cái này
 
 nhà cc không trong sp, thêm số bank, zalo 
-thêm sp từ exel
-
-xuất sp ra exel
 
 thêm mã vạch EAN13, quét mã vạch 
 
@@ -55,7 +54,7 @@ tạo thêm tab mới nếu có nhiều kh mua mà chưa thanh toán ngay >> ch�
 
 refresh token mượt như fb >> tips javascript
 
-
+tạo phiếu trả hàng
 
 write unit test 
 
@@ -72,3 +71,5 @@ thêm log
 
 thống kê khách hàng
 thống kê doanh thu
+
+thêm tab cài đặt > thêm nhân viên, mẫu in, gửi email, zalo, 

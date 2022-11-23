@@ -9,7 +9,8 @@ appRevenue = createApp({
         filter_input: '',
         filter_by_status: '',
         filter_status: ['Tất cả', 'Hoàn thành', 'Nợ'],
-        total_price_all_invoice: 0,
+        total_revenue: 0,
+        total_order: 0,
         invoice: {id: 0, created_at: '', total_money: 0, had_paid: 0, name: '', phone:'', is_done:''},
         invoices: [],
         productTbls: [],
@@ -59,7 +60,8 @@ appRevenue = createApp({
         .then(response => {
           if(response.status == 200){
             this.invoices = response.data.invoices;
-            this.total_price_all_invoice = response.data.sum_total;
+            this.total_revenue = response.data.total_revenue;
+            this.total_order = response.data.total_order;
 
             this.invoices.forEach(invoice => {
               if(invoice.is_done == true){

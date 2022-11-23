@@ -120,10 +120,18 @@ appProduct = createApp({
     },
     deleteProduct(product, productIndex){
       if(confirm("Are you sure ?")){
-        axios.delete('product/'+ product.id).then(response =>{
+        axios.delete('product/'+ product.id)
+        .then(response =>{
           if(response.status == 200){
             this.products.splice(productIndex,1);
             this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', id_supplier: 0};
+          }
+        })
+        .catch(error =>{
+          if(error.data.Error.includes('foreign key')){
+            alert("Không thể xóa sản phẩm vì sản phẩm này đang tồn tại trong hóa đơn");
+          }else{
+            console.log(error.data.Error);
           }
         });
       }

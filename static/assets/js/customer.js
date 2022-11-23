@@ -97,10 +97,18 @@ const appCustomer = createApp({
     },
     deleteCustomer(customer, customerIndex){
       if(confirm("Are you sure ?")){
-        axios.delete('customer/'+ customer.id).then(response =>{
+        axios.delete('customer/'+ customer.id)
+        .then(response =>{
           if(response.status == 200){
             this.customers.splice(customerIndex,1);
             this.customer = {id: 0, name: '', phone: '', address: {String: '', Valid: false}};
+          }
+        })
+        .catch(error=>{
+          if(error.data.Error.includes('foreign key')){
+            alert("Không thể xóa khách hàng vì khách hàng này đang tồn tại trong hóa đơn");
+          }else{
+            console.log(error.data.Error);
           }
         });
       }

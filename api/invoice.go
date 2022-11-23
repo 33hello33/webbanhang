@@ -80,8 +80,9 @@ type findInvoiceRequest struct {
 }
 
 type findInvoiceResponse struct {
-	SumTotal int64               `json:"sum_total"`
-	Invoices []db.FindInvoiceRow `json:"invoices"`
+	TotalRevenue int64               `json:"total_revenue"`
+	TotalOrder   int                 `json:"total_order"`
+	Invoices     []db.FindInvoiceRow `json:"invoices"`
 }
 
 func (server *Server) findInvoice(ctx *gin.Context) {
@@ -142,7 +143,7 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 		return
 	}
 
-	sumTotal, err := server.store.SumToTalMoney(ctx, db.SumToTalMoneyParams{
+	totalRevenue, err := server.store.SumToTalMoney(ctx, db.SumToTalMoneyParams{
 		CreatedFrom: fromDate,
 		CreatedTo:   toDate,
 		Name:        sql.NullString{String: nameCustomer, Valid: nameCustomer != ""},
@@ -152,13 +153,14 @@ func (server *Server) findInvoice(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		//return
-		sumTotal = 0
+		totalRevenue = 0
 		log.Println("errno no row to calc sum")
 	}
 
 	res := findInvoiceResponse{
-		SumTotal: sumTotal,
-		Invoices: invoices,
+		TotalRevenue: totalRevenue,
+		TotalOrder:   len(invoices),
+		Invoices:     invoices,
 	}
 
 	ctx.JSON(http.StatusOK, res)
