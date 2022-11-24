@@ -48,14 +48,15 @@ type InvoiceDetail struct {
 }
 
 type Product struct {
-	ID          int64     `json:"id"`
-	Name        string    `json:"name"`
-	Unit        string    `json:"unit"`
-	PriceImport int64     `json:"price_import"`
-	Amount      int64     `json:"amount"`
-	Price       int64     `json:"price"`
-	Warehouse   string    `json:"warehouse"`
-	CreatedAt   time.Time `json:"created_at"`
+	ID          int64          `json:"id"`
+	Name        string         `json:"name"`
+	Unit        string         `json:"unit"`
+	PriceImport int64          `json:"price_import"`
+	Amount      int64          `json:"amount"`
+	Price       int64          `json:"price"`
+	Warehouse   sql.NullString `json:"warehouse"`
+	CreatedAt   time.Time      `json:"created_at"`
+	Barcode     sql.NullString `json:"barcode"`
 }
 
 type Session struct {

@@ -13,8 +13,9 @@ CREATE TABLE "products" (
   "price_import" bigint NOT NULL DEFAULT 0,
   "amount" bigint NOT NULL DEFAULT 0,
   "price" bigint NOT NULL DEFAULT 0,
-  "warehouse" varchar NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT (now())
+  "warehouse" varchar,
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "barcode" varchar
 );
 
 CREATE TABLE "suppliers" (

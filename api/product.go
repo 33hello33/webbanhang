@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
@@ -26,6 +27,7 @@ type createProductRequest struct {
 	Amount      int64  `json:"amount"`
 	Price       int64  `json:"price"`
 	WareHouse   string `json:"warehouse"`
+	Barcode     string `json:"barcode"`
 }
 
 func (server *Server) createProduct(ctx *gin.Context) {
@@ -42,7 +44,8 @@ func (server *Server) createProduct(ctx *gin.Context) {
 		Price:       req.Price,
 		PriceImport: req.PriceImport,
 		Amount:      req.Amount,
-		Warehouse:   req.WareHouse,
+		Warehouse:   sql.NullString{String: req.WareHouse, Valid: req.WareHouse != ""},
+		Barcode:     sql.NullString{String: req.Barcode, Valid: req.Barcode != ""},
 	}
 
 	product, err := server.store.CreateProduct(ctx, arg)
@@ -111,6 +114,7 @@ type getProductResponse struct {
 	Amount      int64  `json:"amount"`
 	Price       int64  `json:"price"`
 	WareHouse   string `json:"warehouse"`
+	Barcode     string `json:"barcode"`
 }
 
 func (server *Server) getProduct(ctx *gin.Context) {
@@ -134,7 +138,8 @@ func (server *Server) getProduct(ctx *gin.Context) {
 		PriceImport: product.PriceImport,
 		Amount:      product.Amount,
 		Price:       product.Price,
-		WareHouse:   product.Warehouse,
+		WareHouse:   product.Warehouse.String,
+		Barcode:     product.Barcode.String,
 	}
 
 	// convert product to byte and set to redis
@@ -164,9 +169,10 @@ func (server *Server) updateProduct(ctx *gin.Context) {
 		Amount:      req.Amount,
 		Price:       req.Price,
 		PriceImport: req.PriceImport,
-		Warehouse:   req.WareHouse,
+		Warehouse:   sql.NullString{String: req.WareHouse, Valid: req.WareHouse != ""},
 		Unit:        req.Unit,
 		Name:        req.Name,
+		Barcode:     sql.NullString{String: req.Barcode, Valid: req.Barcode != ""},
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
@@ -288,7 +294,8 @@ func (server *Server) importProductFromFile(ctx *gin.Context) {
 			PriceImport: PriceImport,
 			Price:       Price,
 			Amount:      Amount,
-			Warehouse:   line[6],
+			Warehouse:   sql.NullString{String: line[6], Valid: line[6] != ""},
+			Barcode:     sql.NullString{String: line[8], Valid: line[8] != ""},
 		}
 		_, err = server.store.CreateProduct(ctx, arg)
 		if err != nil {

@@ -5,9 +5,10 @@ insert into products(
     price,
     price_import,
     amount,
-    warehouse
+    warehouse,
+    barcode
 )values(
-    $1,$2,$3,$4,$5,$6
+    $1,$2,$3,$4,$5,$6,$7
 ) returning *;
 
 -- name: GetProduct :one
@@ -30,13 +31,13 @@ price = $3,
 price_import = $4, 
 warehouse = $5,
 unit = $6,
-name = $7
+name = $7,
+barcode = $8
 where id = $1
 returning *;
 
 -- name: DeleteProduct :exec
 delete from products where id = $1;
-
 
 -- name: SearchProductLikeName :many
 select * from products

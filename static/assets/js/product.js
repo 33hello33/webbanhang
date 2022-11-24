@@ -2,7 +2,7 @@ appProduct = createApp({
   delimiters: ['@{', '}'],
   data() {
     return{
-      product: {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''},
+      product: {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', barcode: ''},
       products: [],
       isUpdate: false,
       timeOut: 0,
@@ -36,13 +36,13 @@ appProduct = createApp({
     addProduct() {
       this.isUpdate = false;
       this.changeHeader();
-      this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''};
+      this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', barcode: ''};
     },
     listProduct(){
       axios.get('product/list').then(response =>{
         if(response.status == 200){
           this.products = response.data;
-          this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''};
+          this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', barcode: ''};
         }
       })
       .catch(error => {
@@ -98,7 +98,7 @@ appProduct = createApp({
         .then(response =>{
           if(response.status == 200){
             this.products.splice(productIndex,1);
-            this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: ''};
+            this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', barcode: ''};
           }
         })
         .catch(error =>{
@@ -157,6 +157,28 @@ appProduct = createApp({
           link.remove();
         }); 
       },
+      autoGenBarcode(){
+        var m = new Date().valueOf();
+        let i=0;
+        for(;i < 100; i++){
+          if (this.genBarcode(m+i) == true){
+              break
+          }
+        }
+        this.product.barcode = (m +i).toString();
+      },
+      genBarcode(number){
+        try {
+          JsBarcode("#barcode")
+          .options({width:1.5,height:50,})
+          .EAN13(number, {fontSize: 12, textMargin: 0})
+          .render();
+          return true
+        }
+        catch(err) {
+          return false
+        }
+      }
   },
   beforeMount(){
     this.listProduct();
