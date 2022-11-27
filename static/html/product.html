@@ -13,11 +13,7 @@
                 <!-- content @s  -->
                 <div class="nk-content ">
                     <div class="nk-block nk-block-middle nk-auth-body  wide-xs">
-                        <div class="brand-logo pb-4 text-center">
-                            <a href="/" class="logo-link">
-                                <img class="logo-dark logo-img logo-img-lg" src="/assets/images/logo.png" alt="logo">
-                            </a>
-                        </div>
+     
         <div class="card">
            <div class="card-inner card-inner-lg">
                 <div class="w3-sidebar w3-collapse" id="sidenav" style="top: 44px;display: none;">
@@ -25,15 +21,17 @@
                     <div id="leftmenuinnerinner">
                         <input type="text" name="find" v-on:keyup="searchInputChanges()" v-model="searchInput" placeholder="Tìm kiếm" class="form-control form-control-lg"/>
                         <br>
-                        <h2 target="_top" v-on:click="addProduct()" class="addButton">thêm sản phẩm</h2>
-                        <h2 target="_top" v-on:click="importProductFromExcel()" class="addButton">nhập sp từ excel</h2>
-                        <h2 target="_top" v-on:click="exportProductToExcel()" class="addButton">xuất sp ra excel</h2>
+                        <h2 target="_top" v-on:click="menuAddProduct()" class="addButton">Thêm sản phẩm</h2>
+                        <h2 target="_top" v-on:click="menuImportProductFromExcel()" class="addButton">Nhập sp từ excel</h2>
+                        <h2 target="_top" v-on:click="menuExportProductToExcel()" class="addButton">Xuất sp ra excel</h2>
+                        <h2 target="_top" v-on:click="menuPrintBarcode()" class="addButton">In mã vạch</h2>
+                        
                         <br>
                         <h2 target="_top">ds sản phẩm</h2>
                         <div class="list-leftmenu" v-for="(product, productIndex) in products">
                         <a v-on:click="getDetailProduct(product)" target="_top"  >@{ product.name }</a>
                         <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="deleteProduct(product, productIndex)" >x</button>
-                        <button type="button" class="btn btn-danger btn-sm custom-button" v-on:click.prevent.stop v-on:click="copyProduct(product)" >copy</button> 
+                        <button type="button" class="btn btn-warning" v-on:click.prevent.stop v-on:click="copyProduct(product)" >copy</button> 
                     </div>
                         
                         <br><br>
@@ -73,25 +71,52 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="barcode">Mã Vạch</label>
-                        <input v-model="product.barcode" type="text" class="form-control form-control-lg" name="barcode" placeholder="Mã vạch (13 số)" required="">
-                        <button v-on:click="autoGenBarcode()">Tạo tự động</button>
+                        
+                        <div>
+                            <input v-model="product.barcode" style="display:inline;width: 80%;" class="form-control form-control-lg" name="barcode" placeholder="Mã vạch (13 số)" required="">
+                            <button v-on:click="autoGenBarcode()" style="display:inline;float: right;" class="btn btn-warning">Tạo tự động</button>
+                        </div>
                     </div>
-                    
-                    <svg id="barcode"></svg>
+                       
                     <div class="form-group">
                         <button type="button" ref="buttonProduct" id="buttonProduct" v-on:click="createProduct(product)" class="btn btn-lg btn-primary btn-block">Thêm Sản Phẩm</button>
                     </div>
                 </form>
 
-                <div id="import_from_excel">
+                </div>
+                <div id="import_from_excel" class ="right-panel" style="width: 70%; float:right; display: none;">
                     <input id="input_file_import" type="file" name="file" ref="file" v-on:change="inputFileChange()">
-                    <button v-on:click="uploadFile()">Nhập file</button>  
+                    <button v-on:click="uploadFile()"  class="btn btn-danger" style="width: 70%; justify-content: center;">Nhập file</button>  
                 </div>
-                <div id="export_to_excel">
-                    <button v-on:click="exportFile()" id="export_to_file">Xuất file</button>    
+                <div id="export_to_excel" class ="right-panel" style="width: 70%; float:right; display: none;">
+                    <button v-on:click="exportFile()" id="export_to_file" class="btn btn-danger" style="width: 70%;justify-content: center;" >Xuất file</button>    
                 </div>
+                <div id="print_barcode" class ="right-panel" style="width: 70%; float:right; display: none;"> 
+
+                    <div class="form-group">
+                        <label class="form-label" for="amount" >Số Lượng</label>
+                        <input v-model="product.amount" type="number" class="form-control form-control-lg" name="amount" placeholder="Số lượng sản phẩm nhập vào" required="">
+                    </div>
+   
+                    <div class="form-group">
+                        <label class="form-label" for="barcode">Mã Vạch</label>
+                        
+                        <div>
+                            <input v-model="product.barcode" style="display:inline;width: 80%;" class="form-control form-control-lg" name="barcode" placeholder="Mã vạch (13 số)" required="">
+                        </div>
+                    </div>
+                    <div style="text-align: center;" >
+                        <svg class="barcode"></svg>
+                        <div>
+                            <label> @{product.name} : </label>
+                            <label> @{product.price}đ </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button v-on:click="PrintBarcode()" >In mã</button>
+                    </div>  
                 </div>
-            
             </div>
         </div>
 

@@ -1,17 +1,15 @@
 package api
 
 import (
-	"bytes"
 	"database/sql"
 	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
-	"os/exec"
 	"strconv"
 	"time"
 	db "webbanhang/db/sqlc"
+	"webbanhang/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -311,7 +309,7 @@ func (server *Server) exportProductToFile(ctx *gin.Context) {
 	cmd := "docker exec postgres12 psql -d webbanhang -c \"COPY products to stdout csv header\""
 
 	//  export file products.csv to docker
-	err, out, _ := execCommandline(cmd)
+	err, out, _ := util.ExecCommandline(cmd)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errResponse(err))
 		return
@@ -320,18 +318,23 @@ func (server *Server) exportProductToFile(ctx *gin.Context) {
 	ctx.Data(http.StatusOK, "application/vnd.ms-excel", []byte(out.String()))
 }
 
-func execCommandline(command string) (err error, out bytes.Buffer, stderr bytes.Buffer) {
-	fmt.Println(command)
-	cmd := exec.Command("powershell", command)
-	cmd.Stdout = &out
-	cmd.Stderr = &stderr
+type printBarcodeProductRequest struct {
+	ID      int64  `uri:"id"`
+	Barcode string `uri:"barcode"`
+	Amount  int64  `uri:"amount"`
+}
 
-	err = cmd.Run()
+func (server *Server) printBarcodeProduct(ctx *gin.Context) {
+	var req printBarcodeProductRequest
+	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
 		return
 	}
-
-	fmt.Println("Result: " + out.String())
-	return
+	product, err := server.store.GetProduct(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
+		return
+	}
+	ctx.HTML(http.StatusOK, "print_barcode.html", gin.H{"name": product.Name, "price": product.Price})
 }

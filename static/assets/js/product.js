@@ -33,7 +33,8 @@ appProduct = createApp({
         this.searchProduct();
       }, 300);
     },
-    addProduct() {
+    menuAddProduct() {
+      this.showHideDiv("block","none", "none", "none");
       this.isUpdate = false;
       this.changeHeader();
       this.product = {id: 0, name: '', unit: '', amount: 0, price: 0, price_import: 0, warehouse: '', barcode: ''};
@@ -75,6 +76,7 @@ appProduct = createApp({
       }
     },
     getDetailProduct(product){
+      this.showHideDiv("block","none", "none", "none");
       this.isUpdate = true;
       this.changeHeader();
       axios.get('product/' + product.id).then(response =>{
@@ -142,7 +144,6 @@ appProduct = createApp({
       this.file=this.$refs.file.files[0];
     },
     exportFile(){
-      const url = 'http://localhost:8080/product/export_to_file';
         axios.get('product/export_to_file',
           {responseType : 'blob'})
         .then(({data}) => {
@@ -169,7 +170,7 @@ appProduct = createApp({
       },
       genBarcode(number){
         try {
-          JsBarcode("#barcode")
+          JsBarcode(".barcode")
           .options({width:1.5,height:50,})
           .EAN13(number, {fontSize: 12, textMargin: 0})
           .render();
@@ -177,6 +178,38 @@ appProduct = createApp({
         }
         catch(err) {
           return false
+        }
+      },
+      menuImportProductFromExcel(){
+        this.showHideDiv("none","block", "none","none");
+      },
+      menuExportProductToExcel(){
+        this.showHideDiv("none","none", "block","none");
+      },
+      menuPrintBarcode(){
+        this.showHideDiv("none","none", "none","block");
+        this.genBarcode(this.product.barcode);
+      },
+      showHideDiv(productF, importF, exportF, barcodeF){
+        // hide all 
+        var modal = document.getElementById("normal");
+        modal.style.display = productF;
+
+        // display div import
+        var modal = document.getElementById("import_from_excel");
+        modal.style.display = importF;
+
+        // hide div export 
+        var modal = document.getElementById("export_to_excel");
+        modal.style.display = exportF;
+
+        // hide div print barcode 
+        var modal = document.getElementById("print_barcode");
+        modal.style.display = barcodeF;
+      },
+      PrintBarcode(){
+        if(this.product.barcode != ''){
+          window.open('product/print_barcode/id=' + this.product.id + '/barcode=' + this.product.barcode +'/amount=' + this.product.amount,'_blank');
         }
       }
   },

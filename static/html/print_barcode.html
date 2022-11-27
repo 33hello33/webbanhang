@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi" class="js">
+    {{template "header.html"}}
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link id="skin-default" rel="stylesheet" href="/assets/css/print_invoice.css">
+<style>
+    .div_barcode{
+      text-align: center;
+      display:inline-block
+    }
+
+</style>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.ean-upc.min.js"></script>
+
+   <div id="menu-shopee"class="menu-shopee">
+           
+    <div class="notify">
+      <div class="TpsA1iEpt3fKisVnjfvg">
+        <div class="GjJ3oySkB5BiA9dXRELS">Xem trước bản in</div>
+      </div>
+      <button onclick="printDiv('menu-shopee')" class="shopee-react-button shopee-react-button--primary shopee-react-button--normal">
+          <span class="glyphicon glyphicon-print"></span>
+          <span class="print">In phiếu</span>
+    </button>
+  </div>
+</div>
+
+<body>
+<div id="root" class="page">
+
+    <div class="div_barcode" >
+      <svg class="barcode"></svg>
+    <div><a>{{.name}}</a> : <a>{{.price}}đ</a></div>  
+    </div>
+
+ </div>
+ 
+
+<script src="/assets/js/print_barcode.js">
+</script>
+<script>
+  function printDiv(divName){
+    var menu = document.getElementById(divName);
+    menu.style.display = "none";
+
+    window.print();
+
+    menu.style.display = "block";
+
+  }
+
+
+</script>
+</body>
+</html>
