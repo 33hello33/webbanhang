@@ -44,9 +44,11 @@
 
 [fix ok] nhà cc không trong sp, thêm số bank, zalo 
 
-thêm mã vạch EAN13
+[fix ok] thêm mã vạch EAN13
+
+[fix ok] in mã vạch
+
 quét mã vạch 
-in mã vạch
 
 filter sp hết hàng, gần hết hàng
 

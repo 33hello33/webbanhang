@@ -7,14 +7,13 @@ import (
 	db "webbanhang/db/sqlc"
 	"webbanhang/util"
 
-	_ "github.com/lib/pq"
-)
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/source/github"
+	_ "github.com/mattes/migrate/source/file"
 
-const (
-	ADDRESS   = "0.0.0.0:8080"
-	DB_NAME   = "webbanhang"
-	DB_DRIVER = "postgres"
-	DB_SOURCE = "postgresql://root:secret@localhost:5432/" + DB_NAME + "?sslmode=disable"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -28,14 +27,29 @@ func main() {
 		log.Fatal("cannot connect to the DB. Err: ", err)
 	}
 
+	runDBMigration(config.MigrationURL, config.DBSource)
+
 	store := db.NewStore(conn)
 	server, err := api.NewServer(store, config)
 	if err != nil {
 		log.Fatal("cannot create new server: ", err)
 	}
 
-	err = server.Start(ADDRESS)
+	err = server.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatal("cannot start server by address: ", err)
 	}
+}
+
+func runDBMigration(migrationURL string, dbSource string) {
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Fatal("cannot create new migration instance:", err)
+	}
+
+	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to migrate up:", err)
+	}
+
+	log.Println("db migrate successfully")
 }

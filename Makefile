@@ -1,18 +1,26 @@
+DB_URL=postgresql://root:secret@localhost:5432/webbanhang?sslmode=disable
+
+network:
+	docker network create bank-network
+
+postgres:
+	docker run --name postgres --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+
 createdb:
-	docker exec -it postgres12 createdb -U root --owner=root webbanhang
+	docker exec -it postgres createdb -U root --owner=root webbanhang
 
 dropdb:
-	docker exec -it postgres12 dropdb webbanhang
+	docker exec -it postgres dropdb webbanhang
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/webbanhang?sslmode=disable" -verbose up
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/webbanhang?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "$(DB_URL)" -verbose up 1
 
 migratedown:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/webbanhang?sslmode=disable" -verbose down
+	migrate -path db/migration -database "$(DB_URL)" -verbose down
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/webbanhang?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 
 sqlc:
 	sqlc generate
@@ -23,5 +31,5 @@ test:
 server:
 	go run main.go
 
-.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test server
+.PHONY: network postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test server
 	
