@@ -14,12 +14,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_SOURCE=postgresql://root:secret@localhost:5432/webbanhang?sslmode=disable
+      - DB_SOURCE=postgresql://root:secret@postgres:5432/webbanhang?sslmode=disable
     depends_on:
       - postgres
     entrypoint:
       [
         "/app/wait-for.sh",
+        "-t",
+        "300",
         "postgres:5432",
         "--",
         "/app/start.sh"
