@@ -1,4 +1,4 @@
-DB_URL=postgresql://root:secret@localhost:5432/webbanhang?sslmode=disable
+DB_URL=postgres://root:UkL7kUIEgz30PEEpQIOLlvkr2eJiVElT@dpg-ceitaisgqg4dlfd4uk1g-a/webbanhang_70l2
 
 network:
 	docker network create bank-network
