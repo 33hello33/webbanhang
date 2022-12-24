@@ -45,7 +45,7 @@ func (server *Server) SetupRoute() {
 	router.LoadHTMLGlob("./static/html/*")
 	router.Static("/assets/", "./static/assets")
 
-	router.GET("/", server.invoiceHandler)
+	router.GET("/", server.loginHandler)
 	router.GET("/login", server.loginHandler)
 	router.GET("/register", server.registerHandler)
 	router.POST("/login", server.loginUser)
