@@ -36,8 +36,8 @@ func NewServer(store *db.Store, config util.Config) (*Server, error) {
 	return server, nil
 }
 
-func (server *Server) Start(address string) error {
-	return server.route.Run(address)
+func (server *Server) Start(address string, port string) error {
+	return server.route.Run(address + ":" + port)
 }
 
 func (server *Server) SetupRoute() {
