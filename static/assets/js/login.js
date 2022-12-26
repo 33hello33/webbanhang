@@ -14,7 +14,7 @@ const appLogin = createApp({
         .then(response => {
               var data = response.data;
               localStorage.setItem('refresh_token', data.refresh_token)
-              window.location.href = '/';          
+              window.location.href = '/invoice';          
             })
         .catch(error => {
           console.log(error.data.Error);
