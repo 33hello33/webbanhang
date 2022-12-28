@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	db "webbanhang/db/sqlc"
 
@@ -18,8 +19,8 @@ type StringNull struct {
 }
 
 type createCustomerRequest struct {
-	Name    string     `json:"name"`
-	Phone   string     `json:"phone"`
+	Name    string     `json:"name" binding:"required,alphanum"`
+	Phone   string     `json:"phone" binding:"numeric"`
 	Address StringNull `json:"address"`
 }
 
@@ -27,6 +28,7 @@ func (server *Server) createCustomer(ctx *gin.Context) {
 	var customer db.Customer
 	var req createCustomerRequest
 	err := ctx.ShouldBind(&req)
+
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errResponse(err))
 		return
@@ -47,19 +49,21 @@ func (server *Server) createCustomer(ctx *gin.Context) {
 				Phone:   req.Phone,
 				Address: sql.NullString(req.Address),
 			}
-
 			customer, err = server.store.CreateCustomer(ctx, arg)
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, errResponse(err))
 				return
 			}
+			ctx.JSON(http.StatusOK, customer)
 		} else {
 			ctx.JSON(http.StatusInternalServerError, errResponse(err))
 			return
 		}
+	} else {
+		err := fmt.Errorf("Dupplicate user by phone")
+		ctx.JSON(http.StatusBadRequest, errResponse(err))
 	}
 
-	ctx.JSON(http.StatusOK, customer)
 }
 
 func (server *Server) listCustomer(ctx *gin.Context) {
@@ -72,7 +76,7 @@ func (server *Server) listCustomer(ctx *gin.Context) {
 }
 
 type getDetailCustomerRequest struct {
-	ID int64 `uri:"id"`
+	ID int64 `uri:"id" binding:"required,numeric"`
 }
 
 func (server *Server) getDetailCustomer(ctx *gin.Context) {
@@ -93,7 +97,7 @@ func (server *Server) getDetailCustomer(ctx *gin.Context) {
 }
 
 type deleteCustomerRequest struct {
-	ID int64 `uri:"id" binding:"required"`
+	ID int64 `uri:"id" binding:"required,numeric"`
 }
 
 func (server *Server) deleteCustomer(ctx *gin.Context) {
@@ -114,8 +118,8 @@ func (server *Server) deleteCustomer(ctx *gin.Context) {
 }
 
 type updateCustomerRequest struct {
-	ID      int64      `json:"id"`
-	Name    string     `json:"name"`
+	ID      int64      `json:"id" binding:"required,numeric"`
+	Name    string     `json:"name" binding:"required,alphanum"`
 	Phone   string     `json:"phone"`
 	Address StringNull `json:"address"`
 }
@@ -143,7 +147,7 @@ func (server *Server) updateCustomer(ctx *gin.Context) {
 }
 
 type searchCustomerRequest struct {
-	Name string `uri:"name"`
+	Name string `uri:"name" binding:"required,alphanum"`
 }
 
 func (server *Server) searchCustomer(ctx *gin.Context) {

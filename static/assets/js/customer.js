@@ -50,6 +50,9 @@ const appCustomer = createApp({
             if(response.status == 200){
               this.listCustomer();
             }
+          })
+          .catch(error =>{
+            alert(error.data.Error);
           });
       }else{
         // update customer
