@@ -21,8 +21,8 @@ func (server *Server) revenueHandler(ctx *gin.Context) {
 }
 
 type Invoice struct {
-	CustomerID int64 `json:"customer_id"`
-	TotalMoney int64 `json:"total_money"`
+	CustomerID int64 `json:"customer_id" binding:"required"`
+	TotalMoney int64 `json:"total_money" binding:"required"`
 	HadPaid    int64 `json:"had_paid"`
 }
 
@@ -204,7 +204,7 @@ func (server *Server) getDetailInvoice(ctx *gin.Context) {
 }
 
 type updateInvoiceRequest struct {
-	ID int64 `uri:"id"`
+	ID int64 `uri:"id" binding:"required"`
 }
 
 func (server *Server) updateInvoice(ctx *gin.Context) {

@@ -2,7 +2,6 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	db "webbanhang/db/sqlc"
 
@@ -19,8 +18,8 @@ type StringNull struct {
 }
 
 type createCustomerRequest struct {
-	Name    string     `json:"name" binding:"required,alphanum"`
-	Phone   string     `json:"phone" binding:"numeric"`
+	Name    string     `json:"name"`
+	Phone   string     `json:"phone"`
 	Address StringNull `json:"address"`
 }
 
@@ -54,16 +53,15 @@ func (server *Server) createCustomer(ctx *gin.Context) {
 				ctx.JSON(http.StatusInternalServerError, errResponse(err))
 				return
 			}
-			ctx.JSON(http.StatusOK, customer)
+
 		} else {
 			ctx.JSON(http.StatusInternalServerError, errResponse(err))
 			return
 		}
-	} else {
-		err := fmt.Errorf("Dupplicate user by phone")
-		ctx.JSON(http.StatusBadRequest, errResponse(err))
 	}
 
+	// exists customer // dupplicate
+	ctx.JSON(http.StatusOK, customer)
 }
 
 func (server *Server) listCustomer(ctx *gin.Context) {
